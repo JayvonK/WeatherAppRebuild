@@ -27,7 +27,11 @@ export default function Home() {
 
           </div>
 
-          <div>
+          <div className="p-5 boxTwoBg rounded-lg">
+
+            <div className="">
+              <h1>5 Day Forecast</h1>
+            </div>
 
           </div>
         </div>

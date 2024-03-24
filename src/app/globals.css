@@ -11,3 +11,7 @@
   background: rgb(0,0,0);
   background: linear-gradient(180deg, rgba(0,0,0, 0.51) 0%, rgba(2,32,60, 0.85) 90%, rgba(10,31,50, 0.85) 100%);
 }
+
+.boxTwoBg {
+  background: linear-gradient(180deg, rgb(0, 20, 70, 0.8) 0%, rgb(56, 68, 98, 0.80) 100%);
+}
