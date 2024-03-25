@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: Josefin;
+  src: url(../../public/fonts/JosefinSans-VariableFont_wght.ttf);
+}
+
 .weatherBg {
   background-image: url(../../public/images/pexels_videos_2782\ \(1080p\).gif);
   background-size: cover;
@@ -20,4 +25,8 @@
   border-left: solid 2px white;
   height: 100%;
   width: 2px;
+}
+
+.josefin {
+  font-family: Josefin;
 }
