@@ -6,7 +6,7 @@ import thermometer from '../../public/images/thermometer-fill.svg';
 import calender from '../../public/images/calendar-blank-fill.svg';
 import arrDown from '../../public/images/caret-down-bold.svg'
 import { Accordion, Dropdown } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 
@@ -16,6 +16,22 @@ export default function Home() {
     setDayOne(!dayOne);
   }
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(success, error);
+
+    async function success(pos: {
+      coords: { latitude: any; longitude: any };
+    }) {
+      let lat = pos.coords.latitude;
+      let long = pos.coords.longitude;
+      console.log(lat + " " + long)
+    }
+
+    function error(error: { message: string }) {
+      console.log(error.message);
+    }
+
+  }, [])
 
   return (
     <div className="min-h-screen weatherBg px-16 py-8">
@@ -26,7 +42,7 @@ export default function Home() {
 
           <div className="relative">
             <input className="min-h-12 w-full rounded-[25px]" type="text" placeholder="Search for a city" />
-            
+
             {/* <h2 className="min-h-12 bg-white absolute w-full">mf</h2> */}
           </div>
 
