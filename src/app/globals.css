@@ -30,3 +30,43 @@
 .josefin {
   font-family: Josefin;
 }
+
+button.text-gray-500:hover {
+  background-color: rgba(245, 245, 245, 0);
+}
+
+button.text-gray-500:focus {
+  background-color: rgba(245, 245, 245, 0) !important;
+}
+
+button.text-gray-500:active {
+  background-color: rgba(245, 245, 245, 0) !important;
+}
+
+button.text-gray-500 {
+  background-color: rgba(245, 245, 245, 0) !important;
+  border:none !important;
+  --tw-ring-opacity: 0 !important;
+}
+
+.border-gray-200 {
+  --tw-border-opacity: 0 !important;
+}
+
+.hover\:bg-gray-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(245, 245, 245, 0) !important;
+}
+
+.rotateArrow {
+  transform: rotate(180deg);
+  transition: 800ms linear 100ms;
+}
+
+.trans {
+  transition: 1s ease;
+}
+
+.bottomTransition {
+  transition: 2s linear ;
+}
