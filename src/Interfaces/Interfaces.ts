@@ -1,11 +1,11 @@
-interface ICurrentDayData {
+export interface ICurrentDayData {
   weather: CurrWeatherObject[];
   main: {
     temp: number;
     feels_like: number;
     temp_min: number;
     temp_max: number;
-    humidity: string;
+    humidity: number;
   };
   wind: {
     speed: number;

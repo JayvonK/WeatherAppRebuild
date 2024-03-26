@@ -13,8 +13,8 @@
 }
 
 .boxBg {
-  background: rgb(0,0,0);
-  background: linear-gradient(180deg, rgba(0,0,0, 0.51) 0%, rgba(2,32,60, 0.85) 90%, rgba(10,31,50, 0.85) 100%);
+  background: rgb(0, 0, 0);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.51) 0%, rgba(2, 32, 60, 0.85) 90%, rgba(10, 31, 50, 0.85) 100%);
 }
 
 .boxTwoBg {
@@ -36,15 +36,19 @@
   transition: 800ms linear 100ms;
 }
 
-.trans {
+.trans::after {
   transition: 1s ease;
+  content: "F";
 }
 
 .bottomTransition {
-  transition: 2s linear ;
+  transition: 2s linear;
 }
 
 .tempGray {
   color: rgba(255, 255, 255, 0.534);
 }
 
+.fontTransition {
+  transition: font 700ms linear;
+}

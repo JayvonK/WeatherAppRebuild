@@ -15,9 +15,9 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
       {
       props.bool ? (
                 // Open Accordion
-                <div className="transition hover:cursor-pointer" onClick={props.handleDay}>
+                <div className="transition">
                   <div className="flex items-center justify-end pb-2">
-                    <img src={arrDown.src} className={props.bool ? "w-16 rotateArrow" : "w-16"} alt="" />
+                    <img src={arrDown.src} className={"w-16 rotateArrow hover:cursor-pointer"} alt="" onClick={props.handleDay} />
                   </div>
 
 
@@ -89,7 +89,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-[35%_45%_20%] hover:cursor-pointer" onClick={props.handleDay}>
+                <div className="grid grid-cols-[35%_45%_20%]" >
                   {/* Week day */}
                   <div className="flex justify-between items-center">
                     <h3 className="josefin text-5xl text-white">Mon</h3>
@@ -101,7 +101,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                     <h3 className="text-5xl text-white josefin text-center">H: 65 <span className="text-[#A8A8A8]">L: 45</span></h3>
                   </div>
                   <div className="flex items-center justify-end pb-2">
-                    <img src={arrDown.src} className="w-16" alt="" />
+                    <img src={arrDown.src} className="w-16 hover:cursor-pointer" alt="" onClick={props.handleDay}/>
                   </div>
                 </div>
               )}

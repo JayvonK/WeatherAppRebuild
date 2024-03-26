@@ -9,14 +9,63 @@ import { Accordion, Dropdown } from "flowbite-react";
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
 import sun from '../../public/images/sun-fill.svg'
+import { CurrentApiCall } from "@/Data/DataServices";
+import { ICurrentDayData } from "@/Interfaces/Interfaces";
+import { key } from "@/utils/environment";
+import WeatherDataCopy from '@/utils/WeatherCopy.json'
 
 export default function Home() {
 
   const [dayOne, setDayOne] = useState<boolean>(false);
-  const [currentTemp, setCurrentTemp] = useState<number>(65);
+  const [currentName, setCurrentName] = useState<string>()
+  const [currentTemp, setCurrentTemp] = useState<number>();
+  const [currentMinTemp, setCurrentMinTemp] = useState<number>();
+  const [currentMaxTemp, setCurrentMaxTemp] = useState<number>();
+  const [currentWind, setCurrentWind] = useState<number>();
+  const [currentHumidity, setCurrentHumidity] = useState<number>();
+  const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
+  const [currentDescription, setCurrentDescription] = useState<string>('');
+  const [farenheitClass, setFarenheitClass] = useState<string>('text-6xl text-white')
+  const [celciusClass, setCelciusClass] = useState<string>('text-5xl tempGray');
+  const [degreeSymbol, setDegreeSymbol] = useState<string>('F');
+  const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>();
+
+  const handleFarenheit = () => {
+    setFarenheitBool(true);
+    setFarenheitClass('text-6xl text-white');
+    setCelciusClass('text-5xl tempGray');
+    setDegreeSymbol('F');
+  }
+
+  const handleCelcius = () => {
+    setFarenheitBool(false);
+    setCelciusClass('text-6xl text-white');
+    setFarenheitClass('text-5xl tempGray');
+    setDegreeSymbol('C');
+    console.log("hei");
+    
+    console.log(currentWeatherData);
+  }
 
   const handleDayOne = () => {
     setDayOne(!dayOne);
+  }
+
+  const setEverything = (currentWeatherData: ICurrentDayData) => {
+    let maxTemp: number = Math.floor(currentWeatherData.main.temp);
+      let temp: number = Math.floor(currentWeatherData.main.temp);
+      let minTemp: number = Math.floor(currentWeatherData.main.temp_min);
+      let description: string = currentWeatherData.weather[0].description;
+      let wind: number = currentWeatherData.wind.speed;
+      let humidity: number = Math.floor(currentWeatherData.main.humidity);
+      let name: string = currentWeatherData.name;
+      setCurrentTemp(temp);
+      setCurrentMaxTemp(maxTemp);
+      setCurrentMinTemp(minTemp);
+      setCurrentDescription(description);
+      setCurrentWind(wind);
+      setCurrentHumidity(humidity);
+      setCurrentName(name);
   }
 
   useEffect(() => {
@@ -27,14 +76,19 @@ export default function Home() {
     }) {
       let lat = pos.coords.latitude;
       let long = pos.coords.longitude;
+      setCurrentWeatherData(await CurrentApiCall(lat, long, key));
+
       console.log(lat + " " + long)
     }
 
     function error(error: { message: string }) {
+      // setCurrentWeatherData(await CurrentApiCall(lat, long, key));
       console.log(error.message);
     }
 
-  }, [])
+   currentWeatherData && setEverything(currentWeatherData);
+    console.log("working");
+  }, [farenheitBool])
 
   return (
     <div className="min-h-screen weatherBg px-16 py-8">
@@ -74,7 +128,7 @@ export default function Home() {
 
               <div className="flex justify-center">
 
-                <h3 className="text-white josefin text-4xl mb-8">Stockton, CA</h3>
+                <h3 className="text-white josefin text-4xl mb-8">{currentName}</h3>
 
                 <img src={star.src} alt="" />
 
@@ -82,14 +136,14 @@ export default function Home() {
 
               <div className="mb-10 flex justify-center">
                 <h1 className="josefin text-9xl text-center text-white">{currentTemp}</h1>
-                <div className="flex ml-4 items-end">
-                  <h2 className="josefin text-white text-[60px]">°F</h2>
+                <div className="flex ml-4 h-14">
+                  <h2 className={"josefin hover:text-white hover:cursor-pointer fontTransition " + farenheitClass} onClick={handleFarenheit}>°F</h2>
                   <div className="line mx-3"></div>
-                  <h2 className="josefin text-white text-5xl tempGray">°C</h2>
+                  <h2 className={"josefin hover:text-white hover:cursor-pointer fontTransition " + celciusClass} onClick={handleCelcius}>°C</h2>
                 </div>
               </div>
 
-              <h1 className="text-white josefin text-5xl text-center mb-4">Clear Sky</h1>
+              <h1 className="text-white josefin text-5xl text-center mb-4">{currentDescription}</h1>
 
             </div>
 
@@ -113,7 +167,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">65°F</p>
+                      <p className="josefin text-white text-3xl">{currentMaxTemp && currentMaxTemp + "° " + degreeSymbol}</p>
                     </div>
 
                   </div>
@@ -131,7 +185,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">10m/s</p>
+                      <p className="josefin text-white text-3xl">{currentWind && currentWind + 'm/s'}</p>
                     </div>
 
                   </div>
@@ -151,9 +205,8 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">45°F</p>
+                      <p className="josefin text-white text-3xl">{currentMinTemp && currentMinTemp + "° " + degreeSymbol}</p>
                     </div>
-
                   </div>
 
                   {/* Wind */}
@@ -169,7 +222,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">15%</p>
+                      <p className="josefin text-white text-3xl">{ currentHumidity && currentHumidity + '%'}</p>
                     </div>
 
                   </div>
@@ -199,9 +252,7 @@ export default function Home() {
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src}/>
-
-
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src} />
 
           </div>
         </div>
