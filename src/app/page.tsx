@@ -14,6 +14,8 @@ import { ICurrentDayData } from "@/Interfaces/Interfaces";
 import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
+import { GetDayOfWeek } from "@/utils/GetDaysOfWeek";
+import { DescriptionFormat } from "@/utils/DescriptionFormat";
 
 export default function Home() {
 
@@ -41,7 +43,7 @@ export default function Home() {
   const [currentLong, setCurrentLong] = useState('-121.275604');
   const [currentLat, setCurrentLat] = useState('37.961632');
 
-  
+
   const handleFarenheit = () => {
     setFarenheitBool(true);
     setFarenheitClass('text-6xl text-white');
@@ -84,7 +86,7 @@ export default function Home() {
     setFarenheitMaxTemp(maxTemp);
     setCurrentMinTemp(minTemp);
     setFarenheitMinTemp(minTemp);
-    setCurrentDescription(description);
+    setCurrentDescription(DescriptionFormat(description));
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
@@ -106,7 +108,8 @@ export default function Home() {
       console.log(error.message);
     }
 
-    console.log("working");
+    console.log(GetDayOfWeek());
+    console.log(DescriptionFormat("hi my name is jayvon"))
   }, [])
 
   return (
