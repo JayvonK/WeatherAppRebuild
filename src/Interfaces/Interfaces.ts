@@ -10,6 +10,9 @@ export interface ICurrentDayData {
   wind: {
     speed: number;
   };
+  sys: {
+    country: string
+  }
   name: string;
 }
 

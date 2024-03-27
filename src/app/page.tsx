@@ -4,37 +4,52 @@ import Image from "next/image";
 import star from '../../public/images/star-fill.svg';
 import thermometer from '../../public/images/thermometer-fill.svg';
 import calender from '../../public/images/calendar-blank-fill.svg';
-import arrDown from '../../public/images/caret-down-bold.svg'
+import arrDown from '../../public/images/caret-down-bold.svg';
+import sun from '../../public/images/sun-fill.svg'
 import { Accordion, Dropdown } from "flowbite-react";
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
-import sun from '../../public/images/sun-fill.svg'
 import { CurrentApiCall } from "@/Data/DataServices";
 import { ICurrentDayData } from "@/Interfaces/Interfaces";
 import { key } from "@/utils/environment";
-import WeatherDataCopy from '@/utils/WeatherCopy.json'
+import WeatherDataCopy from '@/utils/WeatherCopy.json';
+import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
 
 export default function Home() {
 
   const [dayOne, setDayOne] = useState<boolean>(false);
-  const [currentName, setCurrentName] = useState<string>()
-  const [currentTemp, setCurrentTemp] = useState<number>();
-  const [currentMinTemp, setCurrentMinTemp] = useState<number>();
-  const [currentMaxTemp, setCurrentMaxTemp] = useState<number>();
-  const [currentWind, setCurrentWind] = useState<number>();
-  const [currentHumidity, setCurrentHumidity] = useState<number>();
+  const [currentName, setCurrentName] = useState<string>('')
+  const [currentWind, setCurrentWind] = useState<number>(0);
+  const [currentHumidity, setCurrentHumidity] = useState<number>(0);
   const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
+
+
+  // ALL Temperature Classes
+  const [currentTemp, setCurrentTemp] = useState<number>(0);
+  const [currentMinTemp, setCurrentMinTemp] = useState<number>(0);
+  const [currentMaxTemp, setCurrentMaxTemp] = useState<number>(0);
+  const [farenheitTemp, setFarenheitTemp] = useState<number>(0);
+  const [farenheitMaxTemp, setFarenheitMaxTemp] = useState<number>(0);
+  const [farenheitMinTemp, setFarenheitMinTemp] = useState<number>(0);
+
+
   const [currentDescription, setCurrentDescription] = useState<string>('');
   const [farenheitClass, setFarenheitClass] = useState<string>('text-6xl text-white')
   const [celciusClass, setCelciusClass] = useState<string>('text-5xl tempGray');
   const [degreeSymbol, setDegreeSymbol] = useState<string>('F');
-  const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>();
+  const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>(WeatherDataCopy);
+  const [currentLong, setCurrentLong] = useState('-121.275604');
+  const [currentLat, setCurrentLat] = useState('37.961632');
 
+  
   const handleFarenheit = () => {
     setFarenheitBool(true);
     setFarenheitClass('text-6xl text-white');
     setCelciusClass('text-5xl tempGray');
     setDegreeSymbol('F');
+    setCurrentTemp(farenheitTemp);
+    setCurrentMaxTemp(farenheitMaxTemp);
+    setCurrentMinTemp(farenheitMinTemp);
   }
 
   const handleCelcius = () => {
@@ -42,30 +57,37 @@ export default function Home() {
     setCelciusClass('text-6xl text-white');
     setFarenheitClass('text-5xl tempGray');
     setDegreeSymbol('C');
-    console.log("hei");
-    
     console.log(currentWeatherData);
+    setCurrentTemp(ConvertToCelsius(currentTemp));
+    setCurrentMaxTemp(ConvertToCelsius(currentMaxTemp));
+    setCurrentMinTemp(ConvertToCelsius(currentMinTemp));
   }
 
   const handleDayOne = () => {
     setDayOne(!dayOne);
   }
 
-  const setEverything = (currentWeatherData: ICurrentDayData) => {
-    let maxTemp: number = Math.floor(currentWeatherData.main.temp);
-      let temp: number = Math.floor(currentWeatherData.main.temp);
-      let minTemp: number = Math.floor(currentWeatherData.main.temp_min);
-      let description: string = currentWeatherData.weather[0].description;
-      let wind: number = currentWeatherData.wind.speed;
-      let humidity: number = Math.floor(currentWeatherData.main.humidity);
-      let name: string = currentWeatherData.name;
-      setCurrentTemp(temp);
-      setCurrentMaxTemp(maxTemp);
-      setCurrentMinTemp(minTemp);
-      setCurrentDescription(description);
-      setCurrentWind(wind);
-      setCurrentHumidity(humidity);
-      setCurrentName(name);
+  const setEverything = async () => {
+    // let data: ICurrentDayData = await CurrentApiCall(lat, long, key) || currentWeatherData;
+    let data: ICurrentDayData = currentWeatherData;
+    console.log(data);
+    let maxTemp: number = Math.floor(data.main.temp_max);
+    let temp: number = Math.floor(data.main.temp);
+    let minTemp: number = Math.floor(data.main.temp_min);
+    let description: string = data.weather[0].description;
+    let wind: number = data.wind.speed;
+    let humidity: number = Math.floor(data.main.humidity);
+    let name: string = data.name + ", " + data.sys.country;
+    setCurrentTemp(temp);
+    setFarenheitTemp(temp);
+    setCurrentMaxTemp(maxTemp);
+    setFarenheitMaxTemp(maxTemp);
+    setCurrentMinTemp(minTemp);
+    setFarenheitMinTemp(minTemp);
+    setCurrentDescription(description);
+    setCurrentWind(wind);
+    setCurrentHumidity(humidity);
+    setCurrentName(name);
   }
 
   useEffect(() => {
@@ -76,31 +98,29 @@ export default function Home() {
     }) {
       let lat = pos.coords.latitude;
       let long = pos.coords.longitude;
-      setCurrentWeatherData(await CurrentApiCall(lat, long, key));
-
-      console.log(lat + " " + long)
+      setEverything();
     }
 
     function error(error: { message: string }) {
-      // setCurrentWeatherData(await CurrentApiCall(lat, long, key));
+      // setCurrentWeatherData(await CurrentApiCall());
       console.log(error.message);
     }
 
-   currentWeatherData && setEverything(currentWeatherData);
     console.log("working");
-  }, [farenheitBool])
+  }, [])
 
   return (
     <div className="min-h-screen weatherBg px-16 py-8">
-      <div className="boxBg h-full w-full py-10 px-10 rounded-2xl">
+      <div className="boxBg h-full w-full py-10 px-14 rounded-2xl">
 
         {/* First row of the page */}
         <div className="grid xl:grid-cols-[52%_6%_42%] mb-8">
 
           <div className="relative">
-            <input className="min-h-12 w-full rounded-[25px]" type="text" placeholder="Search for a city" />
 
+            <input className="min-h-12 w-full rounded-[25px]" type="text" placeholder="Search for a city" />
             {/* <h2 className="min-h-12 bg-white absolute w-full">mf</h2> */}
+
           </div>
 
           <div>
@@ -119,19 +139,19 @@ export default function Home() {
 
         {/* The First Column, CURRENT WEATHER*/}
         <div className="grid xl:grid-cols-[50%_6%_44%]">
+
           <div>
 
             {/* The first box */}
-            <div className="p-8 boxTwoBg w-full rounded-3xl mb-20">
+            <div className="p-8 boxTwoBg w-full rounded-3xl mb-20 relative">
+
+              <img className="absolute -left-12 -top-7 w-40" src={sun.src} alt="" />
 
               <h1 className="josefin text-center text-white text-6xl font-bold mb-8">Current Weather</h1>
 
-              <div className="flex justify-center">
-
-                <h3 className="text-white josefin text-4xl mb-8">{currentName}</h3>
-
+              <div className="flex justify-center mb-8 gap-4">
+                <h3 className="text-white josefin text-4xl">{currentName!}</h3>
                 <img src={star.src} alt="" />
-
               </div>
 
               <div className="mb-10 flex justify-center">
@@ -167,7 +187,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentMaxTemp && currentMaxTemp + "° " + degreeSymbol}</p>
+                      <p className="josefin text-white text-3xl">{currentMaxTemp + "°" + degreeSymbol}</p>
                     </div>
 
                   </div>
@@ -185,7 +205,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentWind && currentWind + 'm/s'}</p>
+                      <p className="josefin text-white text-3xl">{currentWind + 'm/s'}</p>
                     </div>
 
                   </div>
@@ -205,7 +225,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentMinTemp && currentMinTemp + "° " + degreeSymbol}</p>
+                      <p className="josefin text-white text-3xl">{currentMinTemp + "°" + degreeSymbol}</p>
                     </div>
                   </div>
 
@@ -222,7 +242,7 @@ export default function Home() {
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{ currentHumidity && currentHumidity + '%'}</p>
+                      <p className="josefin text-white text-3xl">{currentHumidity + '%'}</p>
                     </div>
 
                   </div>
@@ -241,7 +261,7 @@ export default function Home() {
           </div>
 
           {/* SECOND COLUMN 5 DAY FORECAST */}
-          <div className="p-8 boxTwoBg w-full rounded-3xl min-h-[785px] overflow-y-scroll">
+          <div className="py-6 px-8 boxTwoBg w-full rounded-3xl min-h-[785px] overflow-y-scroll">
 
             <div className="flex items-center">
               <img className="min-h-[90px] pb-2" src={calender.src} alt="" />
