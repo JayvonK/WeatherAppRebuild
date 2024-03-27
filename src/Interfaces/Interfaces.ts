@@ -23,13 +23,12 @@ type CurrWeatherObject = {
   icon: string;
 };
 
-interface FiveDayData {}
-
 export interface IFiveDayData {
   list: FiveDayObject[];
   city: {
     name: string;
-    population: string;
+    country: string;
+    population: number;
   };
 }
 
@@ -37,17 +36,19 @@ type FiveDayObject = {
   dt: number;
   main: {
     temp: number;
-    feels_like: number;
     temp_min: number;
     temp_max: number;
     humidity: number;
   };
-  weather: {
-    description: string,
-    icon: string
-  }[];
+  weather: weatherObject[];
   wind: {
-    speed: number
+    speed: number;
   };
-  dt_txt: string 
+  dt_txt: string;
 };
+
+type weatherObject = {
+  description: string;
+  icon: string;
+};
+

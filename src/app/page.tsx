@@ -10,12 +10,14 @@ import { Accordion, Dropdown } from "flowbite-react";
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
 import { CurrentApiCall } from "@/Data/DataServices";
-import { ICurrentDayData } from "@/Interfaces/Interfaces";
+import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
 import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
+import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
-import { GetDayOfWeek } from "@/utils/GetDaysOfWeek";
+import { GetDayOfWeek, GetWeekDays } from "@/utils/GetDaysOfWeek";
 import { DescriptionFormat } from "@/utils/DescriptionFormat";
+import { FindMostRepeatedIcon } from "@/utils/FindMostRepeated";
 
 export default function Home() {
 
@@ -23,6 +25,7 @@ export default function Home() {
   const [currentName, setCurrentName] = useState<string>('')
   const [currentWind, setCurrentWind] = useState<number>(0);
   const [currentHumidity, setCurrentHumidity] = useState<number>(0);
+  const [currentDayIcon, setCurrentDayIcon] = useState<string>('');
   const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
 
 
@@ -40,8 +43,18 @@ export default function Home() {
   const [celciusClass, setCelciusClass] = useState<string>('text-5xl tempGray');
   const [degreeSymbol, setDegreeSymbol] = useState<string>('F');
   const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>(WeatherDataCopy);
-  const [currentLong, setCurrentLong] = useState('-121.275604');
-  const [currentLat, setCurrentLat] = useState('37.961632');
+  // const [currentLong, setCurrentLong] = useState('-121.275604');
+  // const [currentLat, setCurrentLat] = useState('37.961632');
+
+
+  const [fiveDayData, setFiveDayData] = useState<IFiveDayData>(FiveDayDataCopy);
+  const [firstDayName, setFirstDayName] = useState<string>('');
+  const [firstDayMaxTemp, setFirstDayMaxTemp] = useState<number>(0);
+  const [firstDayMinTemp, setFirstDayMinTemp] = useState<number>(0);
+  const [firstDayTemp, setFirstDayTemp] = useState<number>(0);
+  const [firstDayIcon, setFirstDayIcon] = useState<string>('');
+  const [firstDayWind, setFirstDayWind] = useState<number>(0);
+  const [firstDayHumidity, setFirstDayHumidity] = useState<number>(0);
 
 
   const handleFarenheit = () => {
@@ -72,7 +85,10 @@ export default function Home() {
   const setEverything = async () => {
     // let data: ICurrentDayData = await CurrentApiCall(lat, long, key) || currentWeatherData;
     let data: ICurrentDayData = currentWeatherData;
+    let FiveDayData: IFiveDayData = fiveDayData;
     console.log(data);
+
+    // ALL OF CURRENT DAY DATA
     let maxTemp: number = Math.floor(data.main.temp_max);
     let temp: number = Math.floor(data.main.temp);
     let minTemp: number = Math.floor(data.main.temp_min);
@@ -90,6 +106,26 @@ export default function Home() {
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
+
+    let firstDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
+    let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
+    let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
+    let firstDayWindArray = firstDayData.map(data => data.wind.speed);
+    let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
+
+    setFirstDayName(GetWeekDays()[0]);
+    setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
+    setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
+    setFirstDayIcon(FindMostRepeatedIcon(firstDayData.map(data => data.weather[0].icon)));
+    setFirstDayWind(Math.max(...firstDayWindArray));
+    setFirstDayHumidity(Math.max(...firstDayHumidityArray));
+
+
+    let secondDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
+    let thirdDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
+    let fourthDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
+    let fifthDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
+    
   }
 
   useEffect(() => {
@@ -108,7 +144,6 @@ export default function Home() {
       console.log(error.message);
     }
 
-    console.log(GetDayOfWeek());
     console.log(DescriptionFormat("hi my name is jayvon"))
   }, [])
 
