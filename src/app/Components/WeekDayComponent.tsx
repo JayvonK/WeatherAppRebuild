@@ -25,13 +25,13 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                     {/* Left Side General Info */}
                     <div >
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-white text-5xl josefin">{props.dayName}</h3>
+                        <h3 className="text-white text-[40px] josefin">{props.dayName}</h3>
                         <img className="w-20" src={props.weatherIcon} alt="" />
                       </div>
                       <div>
                         <h3 className="text-white text-7xl josefin mb-6">{props.maxTemp}</h3>
                       </div>
-                      <h3 className="text-white text-5xl josefin">{props.description}</h3>
+                      <h3 className="text-white text-[40px] josefin">{props.description}</h3>
                     </div>
 
                     {/* Right Side 4 Pieces of Info */}
@@ -92,7 +92,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                 <div className="grid grid-cols-[35%_55%_10%]" >
                   {/* Week day */}
                   <div className="flex justify-between items-center">
-                    <h3 className="josefin text-5xl text-white">{props.dayName}</h3>
+                    <h3 className="josefin text-[40px] text-white">{props.dayName}</h3>
                     <img className="w-16" src={props.weatherIcon} alt="" />
                   </div>
 

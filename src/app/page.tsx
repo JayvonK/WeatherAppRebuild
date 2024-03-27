@@ -9,7 +9,7 @@ import sun from '../../public/images/sun-fill.svg'
 import { Accordion, Dropdown } from "flowbite-react";
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
-import { CurrentApiCall } from "@/Data/DataServices";
+import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
 import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
 import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
@@ -22,11 +22,18 @@ import { FindMostRepeated } from "@/utils/FindMostRepeated";
 export default function Home() {
 
   const [dayOne, setDayOne] = useState<boolean>(false);
+  const [dayTwo, setDayTwo] = useState<boolean>(false);
+  const [dayThree, setDayThree] = useState<boolean>(false);
+  const [dayFour, setDayFour] = useState<boolean>(false);
+  const [dayFive, setDayFive] = useState<boolean>(false);
+
   const [currentName, setCurrentName] = useState<string>('')
   const [currentWind, setCurrentWind] = useState<number>(0);
   const [currentHumidity, setCurrentHumidity] = useState<number>(0);
   const [currentDayIcon, setCurrentDayIcon] = useState<string>('');
   const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
+  const [searchBool, setSearchBool] = useState<boolean>(false);
+  const [userInput, setUserInput] = useState<string>('');
 
 
   // ALL Temperature Classes
@@ -46,8 +53,8 @@ export default function Home() {
   // const [currentLong, setCurrentLong] = useState('-121.275604');
   // const [currentLat, setCurrentLat] = useState('37.961632');
 
-
   const [fiveDayData, setFiveDayData] = useState<IFiveDayData>(FiveDayDataCopy);
+  // All First Day State Variables
   const [firstDayName, setFirstDayName] = useState<string>('');
   const [firstDayMaxTemp, setFirstDayMaxTemp] = useState<number>(0);
   const [firstDayMinTemp, setFirstDayMinTemp] = useState<number>(0);
@@ -56,6 +63,43 @@ export default function Home() {
   const [firstDayWind, setFirstDayWind] = useState<number>(0);
   const [firstDayHumidity, setFirstDayHumidity] = useState<number>(0);
   const [firstDayDescription, setFirstDayDescription] = useState<string>('');
+
+  const [secondDayName, setSecondDayName] = useState<string>('');
+  const [secondDayMaxTemp, setSecondDayMaxTemp] = useState<number>(0);
+  const [secondDayMinTemp, setSecondDayMinTemp] = useState<number>(0);
+  const [secondDayTemp, setSecondDayTemp] = useState<number>(0);
+  const [secondDayIcon, setSecondDayIcon] = useState<string>('');
+  const [secondDayWind, setSecondDayWind] = useState<number>(0);
+  const [secondDayHumidity, setSecondDayHumidity] = useState<number>(0);
+  const [secondDayDescription, setSecondDayDescription] = useState<string>('');
+
+  const [thirdDayName, setThirdDayName] = useState<string>('');
+  const [thirdDayMaxTemp, setThirdDayMaxTemp] = useState<number>(0);
+  const [thirdDayMinTemp, setThirdDayMinTemp] = useState<number>(0);
+  const [thirdDayTemp, setThirdDayTemp] = useState<number>(0);
+  const [thirdDayIcon, setThirdDayIcon] = useState<string>('');
+  const [thirdDayWind, setThirdDayWind] = useState<number>(0);
+  const [thirdDayHumidity, setThirdDayHumidity] = useState<number>(0);
+  const [thirdDayDescription, setThirdDayDescription] = useState<string>('');
+
+  const [fourthDayName, setFourthDayName] = useState<string>('');
+  const [fourthDayMaxTemp, setFourthDayMaxTemp] = useState<number>(0);
+  const [fourthDayMinTemp, setFourthDayMinTemp] = useState<number>(0);
+  const [fourthDayTemp, setFourthDayTemp] = useState<number>(0);
+  const [fourthDayIcon, setFourthDayIcon] = useState<string>('');
+  const [fourthDayWind, setFourthDayWind] = useState<number>(0);
+  const [fourthDayHumidity, setFourthDayHumidity] = useState<number>(0);
+  const [fourthDayDescription, setFourthDayDescription] = useState<string>('');
+
+  const [fifthDayName, setFifthDayName] = useState<string>('');
+  const [fifthDayMaxTemp, setFifthDayMaxTemp] = useState<number>(0);
+  const [fifthDayMinTemp, setFifthDayMinTemp] = useState<number>(0);
+  const [fifthDayTemp, setFifthDayTemp] = useState<number>(0);
+  const [fifthDayIcon, setFifthDayIcon] = useState<string>('');
+  const [fifthDayWind, setFifthDayWind] = useState<number>(0);
+  const [fifthDayHumidity, setFifthDayHumidity] = useState<number>(0);
+  const [fifthDayDescription, setFifthDayDescription] = useState<string>('');
+  
 
 
   const handleFarenheit = () => {
@@ -83,11 +127,38 @@ export default function Home() {
     setDayOne(!dayOne);
   }
 
-  const setEverything = async () => {
-    // let data: ICurrentDayData = await CurrentApiCall(lat, long, key) || currentWeatherData;
-    let data: ICurrentDayData = currentWeatherData;
-    let FiveDayData: IFiveDayData = fiveDayData;
-    console.log(data);
+  const handleDayTwo = () => {
+    setDayTwo(!dayTwo);
+  }
+
+  const handleDayThree = () => {
+    setDayThree(!dayThree);
+  }
+
+  const handleDayFour = () => {
+    setDayFour(!dayFour);
+  }
+
+  const handleDayFive = () => {
+    setDayFive(!dayFive);
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === "Enter"){
+      setSearch(userInput, key)
+      setUserInput("");
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+  }
+
+  const setInit = async (lat: any, long: any, key: string) => {
+    let data: ICurrentDayData = await CurrentApiCall(lat, long, key);
+    let FiveDayData: IFiveDayData = await FiveDayApiCall(lat, long, key);
+    // let data: ICurrentDayData = currentWeatherData;
+    // let FiveDayData: IFiveDayData = fiveDayData;
 
     // ALL OF CURRENT DAY DATA
     let maxTemp: number = Math.floor(data.main.temp_max);
@@ -108,14 +179,13 @@ export default function Home() {
     setCurrentHumidity(humidity);
     setCurrentName(name);
 
-    let firstDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
+    let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
     let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
     let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
     let firstDayWindArray = firstDayData.map(data => data.wind.speed);
     let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
     let firstDayDescriptionArray = firstDayData.map(data => data.weather[0].description);
     let firstDayIconArray = firstDayData.map(data => data.weather[0].icon);
-    
 
     setFirstDayName(GetWeekDays()[0]);
     setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
@@ -124,13 +194,178 @@ export default function Home() {
     setFirstDayWind(Math.max(...firstDayWindArray));
     setFirstDayHumidity(Math.max(...firstDayHumidityArray));
     setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
-    
 
-    let secondDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
-    let thirdDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
-    let fourthDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
-    let fifthDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
-    
+    let secondDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
+    let secondDayMaxTempArray = secondDayData.map(data => data.main.temp_max);
+    let secondDayMinTempArray = secondDayData.map(data => data.main.temp_min);
+    let secondDayWindArray = secondDayData.map(data => data.wind.speed);
+    let secondDayHumidityArray = secondDayData.map(data => data.main.humidity);
+    let secondDayDescriptionArray = secondDayData.map(data => data.weather[0].description);
+    let secondDayIconArray = secondDayData.map(data => data.weather[0].icon);
+
+    setSecondDayName(GetWeekDays()[1]);
+    setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
+    setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
+    setSecondDayIcon(FindMostRepeated(secondDayIconArray));
+    setSecondDayWind(Math.max(...secondDayWindArray));
+    setSecondDayHumidity(Math.max(...secondDayHumidityArray));
+    setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
+
+
+    let thirdDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
+    let thirdDayMaxTempArray = thirdDayData.map(data => data.main.temp_max);
+    let thirdDayMinTempArray = thirdDayData.map(data => data.main.temp_min);
+    let thirdDayWindArray = thirdDayData.map(data => data.wind.speed);
+    let thirdDayHumidityArray = thirdDayData.map(data => data.main.humidity);
+    let thirdDayDescriptionArray = thirdDayData.map(data => data.weather[0].description);
+    let thirdDayIconArray = thirdDayData.map(data => data.weather[0].icon);
+
+    setThirdDayName(GetWeekDays()[2]);
+    setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
+    setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
+    setThirdDayIcon(FindMostRepeated(thirdDayIconArray));
+    setThirdDayWind(Math.max(...thirdDayWindArray));
+    setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
+    setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
+
+
+    let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
+    let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
+    let fourthDayMinTempArray = fourthDayData.map(data => data.main.temp_min);
+    let fourthDayWindArray = fourthDayData.map(data => data.wind.speed);
+    let fourthDayHumidityArray = fourthDayData.map(data => data.main.humidity);
+    let fourthDayDescriptionArray = fourthDayData.map(data => data.weather[0].description);
+    let fourthDayIconArray = fourthDayData.map(data => data.weather[0].icon);
+
+    setFourthDayName(GetWeekDays()[3]);
+    setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
+    setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
+    setFourthDayIcon(FindMostRepeated(fourthDayIconArray));
+    setFourthDayWind(Math.max(...fourthDayWindArray));
+    setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
+    setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
+
+    let fifthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
+    let fifthDayMaxTempArray = fifthDayData.map(data => data.main.temp_max);
+    let fifthDayMinTempArray = fifthDayData.map(data => data.main.temp_min);
+    let fifthDayWindArray = fifthDayData.map(data => data.wind.speed);
+    let fifthDayHumidityArray = fifthDayData.map(data => data.main.humidity);
+    let fifthDayDescriptionArray = fifthDayData.map(data => data.weather[0].description);
+    let fifthDayIconArray = fifthDayData.map(data => data.weather[0].icon);
+
+    setFifthDayName(GetWeekDays()[4]);
+    setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
+    setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
+    setFifthDayIcon(FindMostRepeated(fifthDayIconArray));
+    setFifthDayWind(Math.max(...fifthDayWindArray));
+    setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
+    setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
+  }
+
+  const setSearch = async (city: string, key: string) => {
+    let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
+    let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city,key);
+
+    // ALL OF CURRENT DAY DATA
+    let maxTemp: number = Math.floor(data.main.temp_max);
+    let temp: number = Math.floor(data.main.temp);
+    let minTemp: number = Math.floor(data.main.temp_min);
+    let description: string = data.weather[0].description;
+    let wind: number = data.wind.speed;
+    let humidity: number = Math.floor(data.main.humidity);
+    let name: string = data.name + ", " + data.sys.country;
+    setCurrentTemp(temp);
+    setFarenheitTemp(temp);
+    setCurrentMaxTemp(maxTemp);
+    setFarenheitMaxTemp(maxTemp);
+    setCurrentMinTemp(minTemp);
+    setFarenheitMinTemp(minTemp);
+    setCurrentDescription(DescriptionFormat(description));
+    setCurrentWind(wind);
+    setCurrentHumidity(humidity);
+    setCurrentName(name);
+
+    let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
+    let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
+    let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
+    let firstDayWindArray = firstDayData.map(data => data.wind.speed);
+    let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
+    let firstDayDescriptionArray = firstDayData.map(data => data.weather[0].description);
+    let firstDayIconArray = firstDayData.map(data => data.weather[0].icon);
+
+    setFirstDayName(GetWeekDays()[0]);
+    setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
+    setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
+    setFirstDayIcon(FindMostRepeated(firstDayIconArray));
+    setFirstDayWind(Math.max(...firstDayWindArray));
+    setFirstDayHumidity(Math.max(...firstDayHumidityArray));
+    setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
+
+    let secondDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
+    let secondDayMaxTempArray = secondDayData.map(data => data.main.temp_max);
+    let secondDayMinTempArray = secondDayData.map(data => data.main.temp_min);
+    let secondDayWindArray = secondDayData.map(data => data.wind.speed);
+    let secondDayHumidityArray = secondDayData.map(data => data.main.humidity);
+    let secondDayDescriptionArray = secondDayData.map(data => data.weather[0].description);
+    let secondDayIconArray = secondDayData.map(data => data.weather[0].icon);
+
+    setSecondDayName(GetWeekDays()[1]);
+    setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
+    setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
+    setSecondDayIcon(FindMostRepeated(secondDayIconArray));
+    setSecondDayWind(Math.max(...secondDayWindArray));
+    setSecondDayHumidity(Math.max(...secondDayHumidityArray));
+    setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
+
+
+    let thirdDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
+    let thirdDayMaxTempArray = thirdDayData.map(data => data.main.temp_max);
+    let thirdDayMinTempArray = thirdDayData.map(data => data.main.temp_min);
+    let thirdDayWindArray = thirdDayData.map(data => data.wind.speed);
+    let thirdDayHumidityArray = thirdDayData.map(data => data.main.humidity);
+    let thirdDayDescriptionArray = thirdDayData.map(data => data.weather[0].description);
+    let thirdDayIconArray = thirdDayData.map(data => data.weather[0].icon);
+
+    setThirdDayName(GetWeekDays()[2]);
+    setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
+    setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
+    setThirdDayIcon(FindMostRepeated(thirdDayIconArray));
+    setThirdDayWind(Math.max(...thirdDayWindArray));
+    setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
+    setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
+
+
+    let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
+    let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
+    let fourthDayMinTempArray = fourthDayData.map(data => data.main.temp_min);
+    let fourthDayWindArray = fourthDayData.map(data => data.wind.speed);
+    let fourthDayHumidityArray = fourthDayData.map(data => data.main.humidity);
+    let fourthDayDescriptionArray = fourthDayData.map(data => data.weather[0].description);
+    let fourthDayIconArray = fourthDayData.map(data => data.weather[0].icon);
+
+    setFourthDayName(GetWeekDays()[3]);
+    setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
+    setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
+    setFourthDayIcon(FindMostRepeated(fourthDayIconArray));
+    setFourthDayWind(Math.max(...fourthDayWindArray));
+    setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
+    setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
+
+    let fifthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
+    let fifthDayMaxTempArray = fifthDayData.map(data => data.main.temp_max);
+    let fifthDayMinTempArray = fifthDayData.map(data => data.main.temp_min);
+    let fifthDayWindArray = fifthDayData.map(data => data.wind.speed);
+    let fifthDayHumidityArray = fifthDayData.map(data => data.main.humidity);
+    let fifthDayDescriptionArray = fifthDayData.map(data => data.weather[0].description);
+    let fifthDayIconArray = fifthDayData.map(data => data.weather[0].icon);
+
+    setFifthDayName(GetWeekDays()[4]);
+    setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
+    setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
+    setFifthDayIcon(FindMostRepeated(fifthDayIconArray));
+    setFifthDayWind(Math.max(...fifthDayWindArray));
+    setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
+    setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
   }
 
   useEffect(() => {
@@ -141,7 +376,7 @@ export default function Home() {
     }) {
       let lat = pos.coords.latitude;
       let long = pos.coords.longitude;
-      setEverything();
+      setInit(lat, long, key);
     }
 
     function error(error: { message: string }) {
@@ -161,7 +396,7 @@ export default function Home() {
 
           <div className="relative">
 
-            <input className="min-h-12 w-full rounded-[25px]" type="text" placeholder="Search for a city" />
+            <input className="min-h-12 w-full rounded-[25px]" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput}/>
             {/* <h2 className="min-h-12 bg-white absolute w-full">mf</h2> */}
 
           </div>
@@ -304,18 +539,34 @@ export default function Home() {
           </div>
 
           {/* SECOND COLUMN 5 DAY FORECAST */}
-          <div className="py-6 px-8 boxTwoBg w-full rounded-3xl min-h-[785px] overflow-y-scroll">
+          <div className="py-6 px-8 boxTwoBg w-full rounded-3xl h-[785px] overflow-y-scroll">
 
             <div className="flex items-center">
               <img className="min-h-[90px] pb-2" src={calender.src} alt="" />
               <h1 className="josefin text-white text-[66px] font-bold text-center w-full">5 Day Forecast</h1>
             </div>
 
-            <hr className="my-10" />
+            <hr className="my-7" />
 
 
             {/* THE ACCORDION */}
             <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription}/>
+
+            <hr className="my-7" />
+
+            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={sun.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription}/>
+
+            <hr className="my-7" />
+
+            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={sun.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription}/>
+
+            <hr className="my-7" />
+
+            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={sun.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription}/>
+
+            <hr className="my-7" />
+
+            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={sun.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription}/>
 
           </div>
         </div>
