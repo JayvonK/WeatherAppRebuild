@@ -13,7 +13,8 @@ import snow from "../../public/images/snow.svg";
 import mist from "../../public/images/mist.svg";
 import magnifyingGlass from "../../public/images/magnifying-glass.svg"
 import x from "../../public/images/x (2).svg";
-import backArrow from "../../public/images/arrow-counter-clockwise.svg"
+import backArrow from "../../public/images/arrow-counter-clockwise.svg";
+import starOutline from "../../public/images/star-outline.svg"
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
 import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
@@ -26,6 +27,7 @@ import { GetDayOfWeek, GetWeekDays } from "@/utils/GetDaysOfWeek";
 import { DescriptionFormat } from "@/utils/DescriptionFormat";
 import { FindMostRepeated } from "@/utils/FindMostRepeated";
 import { GrabIcon } from "@/utils/GrabIcon";
+import { checkPastSearch, getFavorites, getPastSearches, removeFromFavorites, saveToFavorites, saveToPastSearches } from "@/utils/HandleLocalStorage";
 
 export default function Home() {
 
@@ -43,7 +45,6 @@ export default function Home() {
   const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
   const [searchBool, setSearchBool] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
-
 
   // ALL Temperature Classes
   const [currentTemp, setCurrentTemp] = useState<number>(0);
@@ -111,6 +112,9 @@ export default function Home() {
 
   let iconArray: any[] = [sun, fewClouds, scatteredClouds, rain, thunder, snow, mist]
   const [pastSearch, setPastSearch] = useState<boolean>(false);
+  const [pastSearchArray, setPastSearchArray] = useState<string[]>([]);
+  const [favoritesArray, setFavoritesArray] = useState<string[]>([]);
+  const [isFav, setIsFav] = useState<boolean>(false);
 
 
   const handleFarenheit = () => {
@@ -174,9 +178,26 @@ export default function Home() {
     setPastSearch(false);
   }
 
-  const handlePastSearchClick = () => {
+  const handlePastSearchClick = (city: string) => {
     setPastSearch(false);
     setUserInput("");
+    setSearch(city, key);
+  }
+
+  const handleFavoriteClick = () => {
+    if (!isFav) {
+      setIsFav(!isFav);
+      saveToFavorites(currentName);
+      let SearchVariable: [string, boolean] = [currentName, isFav];
+      checkPastSearch(SearchVariable);
+      grabLocalStorage();
+    } else {
+      setIsFav(!isFav);
+      removeFromFavorites(currentName);
+      let SearchVariable: [string, boolean] = [currentName, isFav];
+      checkPastSearch(SearchVariable);
+      grabLocalStorage();
+    }
   }
 
   const setInit = async (lat: any, long: any, key: string) => {
@@ -287,114 +308,134 @@ export default function Home() {
     setFifthDayWind(Math.max(...fifthDayWindArray));
     setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
     setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
+
+    grabLocalStorage()
   }
 
   const setSearch = async (city: string, key: string) => {
-    let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
-    let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
+    try {
+      let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
+      let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
 
-    // ALL OF CURRENT DAY DATA
-    let maxTemp: number = Math.floor(data.main.temp_max);
-    let temp: number = Math.floor(data.main.temp);
-    let minTemp: number = Math.floor(data.main.temp_min);
-    let description: string = data.weather[0].description;
-    let wind: number = data.wind.speed;
-    let humidity: number = Math.floor(data.main.humidity);
-    let name: string = data.name + ", " + data.sys.country;
-    let icon: string = data.weather[0].icon;
-    setCurrentTemp(temp);
-    setFarenheitTemp(temp);
-    setCurrentMaxTemp(maxTemp);
-    setFarenheitMaxTemp(maxTemp);
-    setCurrentMinTemp(minTemp);
-    setFarenheitMinTemp(minTemp);
-    setCurrentDescription(DescriptionFormat(description));
-    setCurrentWind(wind);
-    setCurrentHumidity(humidity);
-    setCurrentName(name);
-    setCurrentDayIcon(iconArray[GrabIcon(icon)])
+      let theSearch: [string, boolean] = [city, isFav];
+      saveToPastSearches(theSearch);
 
-    let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
-    let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
-    let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
-    let firstDayWindArray = firstDayData.map(data => data.wind.speed);
-    let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
-    let firstDayDescriptionArray = firstDayData.map(data => data.weather[0].description);
-    let firstDayIconArray = firstDayData.map(data => data.weather[0].icon);
+      // ALL OF CURRENT DAY DATA
+      let maxTemp: number = Math.floor(data.main.temp_max);
+      let temp: number = Math.floor(data.main.temp);
+      let minTemp: number = Math.floor(data.main.temp_min);
+      let description: string = data.weather[0].description;
+      let wind: number = data.wind.speed;
+      let humidity: number = Math.floor(data.main.humidity);
+      let name: string = data.name + ", " + data.sys.country;
+      let icon: string = data.weather[0].icon;
+      setCurrentTemp(temp);
+      setFarenheitTemp(temp);
+      setCurrentMaxTemp(maxTemp);
+      setFarenheitMaxTemp(maxTemp);
+      setCurrentMinTemp(minTemp);
+      setFarenheitMinTemp(minTemp);
+      setCurrentDescription(DescriptionFormat(description));
+      setCurrentWind(wind);
+      setCurrentHumidity(humidity);
+      setCurrentName(name);
+      setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
-    setFirstDayName(GetWeekDays()[0]);
-    setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
-    setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
-    setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
-    setFirstDayWind(Math.max(...firstDayWindArray));
-    setFirstDayHumidity(Math.max(...firstDayHumidityArray));
-    setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
+      let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
+      let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
+      let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
+      let firstDayWindArray = firstDayData.map(data => data.wind.speed);
+      let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
+      let firstDayDescriptionArray = firstDayData.map(data => data.weather[0].description);
+      let firstDayIconArray = firstDayData.map(data => data.weather[0].icon);
 
-    let secondDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
-    let secondDayMaxTempArray = secondDayData.map(data => data.main.temp_max);
-    let secondDayMinTempArray = secondDayData.map(data => data.main.temp_min);
-    let secondDayWindArray = secondDayData.map(data => data.wind.speed);
-    let secondDayHumidityArray = secondDayData.map(data => data.main.humidity);
-    let secondDayDescriptionArray = secondDayData.map(data => data.weather[0].description);
-    let secondDayIconArray = secondDayData.map(data => data.weather[0].icon);
+      setFirstDayName(GetWeekDays()[0]);
+      setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
+      setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
+      setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
+      setFirstDayWind(Math.max(...firstDayWindArray));
+      setFirstDayHumidity(Math.max(...firstDayHumidityArray));
+      setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
 
-    setSecondDayName(GetWeekDays()[1]);
-    setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
-    setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
-    setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
-    setSecondDayWind(Math.max(...secondDayWindArray));
-    setSecondDayHumidity(Math.max(...secondDayHumidityArray));
-    setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
+      let secondDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
+      let secondDayMaxTempArray = secondDayData.map(data => data.main.temp_max);
+      let secondDayMinTempArray = secondDayData.map(data => data.main.temp_min);
+      let secondDayWindArray = secondDayData.map(data => data.wind.speed);
+      let secondDayHumidityArray = secondDayData.map(data => data.main.humidity);
+      let secondDayDescriptionArray = secondDayData.map(data => data.weather[0].description);
+      let secondDayIconArray = secondDayData.map(data => data.weather[0].icon);
+
+      setSecondDayName(GetWeekDays()[1]);
+      setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
+      setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
+      setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
+      setSecondDayWind(Math.max(...secondDayWindArray));
+      setSecondDayHumidity(Math.max(...secondDayHumidityArray));
+      setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
+
+      let thirdDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
+      let thirdDayMaxTempArray = thirdDayData.map(data => data.main.temp_max);
+      let thirdDayMinTempArray = thirdDayData.map(data => data.main.temp_min);
+      let thirdDayWindArray = thirdDayData.map(data => data.wind.speed);
+      let thirdDayHumidityArray = thirdDayData.map(data => data.main.humidity);
+      let thirdDayDescriptionArray = thirdDayData.map(data => data.weather[0].description);
+      let thirdDayIconArray = thirdDayData.map(data => data.weather[0].icon);
+
+      setThirdDayName(GetWeekDays()[2]);
+      setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
+      setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
+      setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
+      setThirdDayWind(Math.max(...thirdDayWindArray));
+      setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
+      setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
 
 
-    let thirdDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
-    let thirdDayMaxTempArray = thirdDayData.map(data => data.main.temp_max);
-    let thirdDayMinTempArray = thirdDayData.map(data => data.main.temp_min);
-    let thirdDayWindArray = thirdDayData.map(data => data.wind.speed);
-    let thirdDayHumidityArray = thirdDayData.map(data => data.main.humidity);
-    let thirdDayDescriptionArray = thirdDayData.map(data => data.weather[0].description);
-    let thirdDayIconArray = thirdDayData.map(data => data.weather[0].icon);
+      let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
+      let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
+      let fourthDayMinTempArray = fourthDayData.map(data => data.main.temp_min);
+      let fourthDayWindArray = fourthDayData.map(data => data.wind.speed);
+      let fourthDayHumidityArray = fourthDayData.map(data => data.main.humidity);
+      let fourthDayDescriptionArray = fourthDayData.map(data => data.weather[0].description);
+      let fourthDayIconArray = fourthDayData.map(data => data.weather[0].icon);
 
-    setThirdDayName(GetWeekDays()[2]);
-    setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
-    setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
-    setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
-    setThirdDayWind(Math.max(...thirdDayWindArray));
-    setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
-    setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
+      setFourthDayName(GetWeekDays()[3]);
+      setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
+      setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
+      setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
+      setFourthDayWind(Math.max(...fourthDayWindArray));
+      setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
+      setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
 
+      let fifthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
+      let fifthDayMaxTempArray = fifthDayData.map(data => data.main.temp_max);
+      let fifthDayMinTempArray = fifthDayData.map(data => data.main.temp_min);
+      let fifthDayWindArray = fifthDayData.map(data => data.wind.speed);
+      let fifthDayHumidityArray = fifthDayData.map(data => data.main.humidity);
+      let fifthDayDescriptionArray = fifthDayData.map(data => data.weather[0].description);
+      let fifthDayIconArray = fifthDayData.map(data => data.weather[0].icon);
 
-    let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
-    let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
-    let fourthDayMinTempArray = fourthDayData.map(data => data.main.temp_min);
-    let fourthDayWindArray = fourthDayData.map(data => data.wind.speed);
-    let fourthDayHumidityArray = fourthDayData.map(data => data.main.humidity);
-    let fourthDayDescriptionArray = fourthDayData.map(data => data.weather[0].description);
-    let fourthDayIconArray = fourthDayData.map(data => data.weather[0].icon);
+      setFifthDayName(GetWeekDays()[4]);
+      setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
+      setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
+      setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
+      setFifthDayWind(Math.max(...fifthDayWindArray));
+      setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
+      setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
 
-    setFourthDayName(GetWeekDays()[3]);
-    setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
-    setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
-    setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
-    setFourthDayWind(Math.max(...fourthDayWindArray));
-    setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
-    setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
+      grabLocalStorage()
+    } catch (error) {
+      alert("City Does Not Exist");
+    }
 
-    let fifthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[4]);
-    let fifthDayMaxTempArray = fifthDayData.map(data => data.main.temp_max);
-    let fifthDayMinTempArray = fifthDayData.map(data => data.main.temp_min);
-    let fifthDayWindArray = fifthDayData.map(data => data.wind.speed);
-    let fifthDayHumidityArray = fifthDayData.map(data => data.main.humidity);
-    let fifthDayDescriptionArray = fifthDayData.map(data => data.weather[0].description);
-    let fifthDayIconArray = fifthDayData.map(data => data.weather[0].icon);
+  }
 
-    setFifthDayName(GetWeekDays()[4]);
-    setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
-    setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
-    setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
-    setFifthDayWind(Math.max(...fifthDayWindArray));
-    setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
-    setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
+  const grabLocalStorage = () => {
+    setPastSearchArray(getPastSearches());
+    setFavoritesArray(getFavorites());
+    if (getFavorites().includes(currentName.toLowerCase())) {
+      setIsFav(true);
+      console.log("im true");
+    }
   }
 
   useEffect(() => {
@@ -433,16 +474,24 @@ export default function Home() {
 
             {
               pastSearch ? (
-                <div className="min-h-12 text-white josefin absolute w-full z-10 searchBg flex items-center hover:bg-gray-400 text-xl" onClick={handlePastSearchClick}>
-                  <img className="mx-3 hover:cursor-pointer" src={backArrow.src} alt="" />
-                  <p className="pl-3">mf</p>
-                  <div className="flex justify-end w-full">
-                    <img className="mx-3 hover:cursor-pointer" src={backArrow.src} alt="" />
-                  </div>
+                <div className="absolute w-full z-10">
+                  {
+                    pastSearchArray.length !== 0 && pastSearchArray.map(search => (
+                      <div className="min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl">
+                        <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
+                        <p className="pl-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])}>{search[0]}</p>
+                        <div className="flex justify-end w-full">
+                          {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" />)}
+                        </div>
+                      </div>
+                    ))
+                  }
+
                 </div>
               ) : (
                 <div></div>
-              )}
+              )
+            }
 
           </div>
 
@@ -474,7 +523,12 @@ export default function Home() {
 
               <div className="flex justify-center mb-8 gap-4">
                 <h3 className="text-white josefin text-4xl">{currentName!}</h3>
-                <img src={star.src} alt="" />
+                {isFav ? (
+                  <img className="hover: cursor-pointer pb-2" src={star.src} alt="" onClick={handleFavoriteClick}/>
+                ) : (
+                  <img className="hover: cursor-pointer pb-2" src={starOutline.src} alt="" onClick={handleFavoriteClick} />
+                )
+                }
               </div>
 
               <div className="mb-10 flex justify-center">
