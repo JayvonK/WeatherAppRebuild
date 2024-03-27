@@ -17,7 +17,7 @@ import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
 import { GetDayOfWeek, GetWeekDays } from "@/utils/GetDaysOfWeek";
 import { DescriptionFormat } from "@/utils/DescriptionFormat";
-import { FindMostRepeatedIcon } from "@/utils/FindMostRepeated";
+import { FindMostRepeated } from "@/utils/FindMostRepeated";
 
 export default function Home() {
 
@@ -55,6 +55,7 @@ export default function Home() {
   const [firstDayIcon, setFirstDayIcon] = useState<string>('');
   const [firstDayWind, setFirstDayWind] = useState<number>(0);
   const [firstDayHumidity, setFirstDayHumidity] = useState<number>(0);
+  const [firstDayDescription, setFirstDayDescription] = useState<string>('');
 
 
   const handleFarenheit = () => {
@@ -112,14 +113,18 @@ export default function Home() {
     let firstDayMinTempArray = firstDayData.map(data => data.main.temp_min);
     let firstDayWindArray = firstDayData.map(data => data.wind.speed);
     let firstDayHumidityArray = firstDayData.map(data => data.main.humidity);
+    let firstDayDescriptionArray = firstDayData.map(data => data.weather[0].description);
+    let firstDayIconArray = firstDayData.map(data => data.weather[0].icon);
+    
 
     setFirstDayName(GetWeekDays()[0]);
     setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
     setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
-    setFirstDayIcon(FindMostRepeatedIcon(firstDayData.map(data => data.weather[0].icon)));
+    setFirstDayIcon(FindMostRepeated(firstDayIconArray));
     setFirstDayWind(Math.max(...firstDayWindArray));
     setFirstDayHumidity(Math.max(...firstDayHumidityArray));
-
+    setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
+    
 
     let secondDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[1]);
     let thirdDayData = fiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[2]);
@@ -310,7 +315,7 @@ export default function Home() {
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src} />
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription}/>
 
           </div>
         </div>

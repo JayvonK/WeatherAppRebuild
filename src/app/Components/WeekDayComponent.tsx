@@ -9,7 +9,7 @@ import wind from '../../../public/images/wind-bold.svg';
 import arrDown from '../../../public/images/caret-down-bold.svg';
 
 
-const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherIcon: string}) => {
+const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherIcon: string, dayName: string, maxTemp: number, minTemp: number, wind: number, humidity: number, description: string}) => {
   return (
     <div>
       {
@@ -25,13 +25,13 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                     {/* Left Side General Info */}
                     <div >
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-white text-5xl josefin">Mon</h3>
+                        <h3 className="text-white text-5xl josefin">{props.dayName}</h3>
                         <img className="w-20" src={props.weatherIcon} alt="" />
                       </div>
                       <div>
-                        <h3 className="text-white text-7xl josefin mb-6">65</h3>
+                        <h3 className="text-white text-7xl josefin mb-6">{props.maxTemp}</h3>
                       </div>
-                      <h3 className="text-white text-5xl josefin">Clear Sky</h3>
+                      <h3 className="text-white text-5xl josefin">{props.description}</h3>
                     </div>
 
                     {/* Right Side 4 Pieces of Info */}
@@ -44,7 +44,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                           <div className="line"></div>
                         </div>
                         <div className="flex items-center">
-                          <p className="text-white josefin text-2xl">65 F</p>
+                          <p className="text-white josefin text-2xl">{props.maxTemp} F</p>
                         </div>
                       </div>
 
@@ -56,7 +56,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                           <div className="line"></div>
                         </div>
                         <div className="flex items-center">
-                          <p className="text-white josefin text-2xl">65 F</p>
+                          <p className="text-white josefin text-2xl">{props.minTemp} F</p>
                         </div>
                       </div>
 
@@ -68,7 +68,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                           <div className="line"></div>
                         </div>
                         <div className="flex items-center">
-                          <p className="text-white josefin text-2xl">65 F</p>
+                          <p className="text-white josefin text-2xl">{props.wind}m/s</p>
                         </div>
                       </div>
 
@@ -80,7 +80,7 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                           <div className="line"></div>
                         </div>
                         <div className="flex items-center">
-                          <p className="text-white josefin text-2xl">65 F</p>
+                          <p className="text-white josefin text-2xl">{props.humidity}%</p>
                         </div>
                       </div>
 
@@ -89,16 +89,16 @@ const WeekDayComponent = (props: {bool: boolean, handleDay: () => void, weatherI
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-[35%_45%_20%]" >
+                <div className="grid grid-cols-[35%_55%_10%]" >
                   {/* Week day */}
                   <div className="flex justify-between items-center">
-                    <h3 className="josefin text-5xl text-white">Mon</h3>
+                    <h3 className="josefin text-5xl text-white">{props.dayName}</h3>
                     <img className="w-16" src={props.weatherIcon} alt="" />
                   </div>
 
                   {/* High and low Temp */}
                   <div className="flex items-center justify-center">
-                    <h3 className="text-5xl text-white josefin text-center">H: 65 <span className="text-[#A8A8A8]">L: 45</span></h3>
+                    <h3 className="text-5xl text-white josefin text-center">H: {props.maxTemp} <span className="text-[#A8A8A8]">L: {props.minTemp}</span></h3>
                   </div>
                   <div className="flex items-center justify-end pb-2">
                     <img src={arrDown.src} className="w-16 hover:cursor-pointer" alt="" onClick={props.handleDay}/>
