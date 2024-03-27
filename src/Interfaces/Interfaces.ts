@@ -11,8 +11,8 @@ export interface ICurrentDayData {
     speed: number;
   };
   sys: {
-    country: string
-  }
+    country: string;
+  };
   name: string;
 }
 
@@ -24,3 +24,30 @@ type CurrWeatherObject = {
 };
 
 interface FiveDayData {}
+
+export interface IFiveDayData {
+  list: FiveDayObject[];
+  city: {
+    name: string;
+    population: string;
+  };
+}
+
+type FiveDayObject = {
+  dt: number;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    humidity: number;
+  };
+  weather: {
+    description: string,
+    icon: string
+  }[];
+  wind: {
+    speed: number
+  };
+  dt_txt: string 
+};
