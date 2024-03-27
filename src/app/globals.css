@@ -52,3 +52,20 @@
 .fontTransition {
   transition: font 700ms linear;
 }
+
+.inputRounded {
+  border-radius: 25px 25px 0 0;
+}
+
+.inputBg {
+  background-color: hsla(0, 5%, 69%, 0.555);
+}
+
+.searchBg {
+  background-color: hsl(0, 0%, 51%);;
+}
+
+input::placeholder {
+  color: white;
+  opacity: 1;
+}

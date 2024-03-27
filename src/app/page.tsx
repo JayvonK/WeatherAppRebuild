@@ -4,9 +4,16 @@ import Image from "next/image";
 import star from '../../public/images/star-fill.svg';
 import thermometer from '../../public/images/thermometer-fill.svg';
 import calender from '../../public/images/calendar-blank-fill.svg';
-import arrDown from '../../public/images/caret-down-bold.svg';
-import sun from '../../public/images/sun-fill.svg'
-import { Accordion, Dropdown } from "flowbite-react";
+import sun from "../../public/images/sun-fill.svg";
+import fewClouds from "../../public/images/Few Clouds.svg";
+import scatteredClouds from "../../public/images/scattered cloutds.svg";
+import rain from "../../public/images/rain.svg";
+import thunder from "../../public/images/thunder.svg";
+import snow from "../../public/images/snow.svg";
+import mist from "../../public/images/mist.svg";
+import magnifyingGlass from "../../public/images/magnifying-glass.svg"
+import x from "../../public/images/x (2).svg";
+import backArrow from "../../public/images/arrow-counter-clockwise.svg"
 import { useEffect, useState } from "react";
 import WeekDayComponent from "./Components/WeekDayComponent";
 import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
@@ -18,8 +25,10 @@ import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
 import { GetDayOfWeek, GetWeekDays } from "@/utils/GetDaysOfWeek";
 import { DescriptionFormat } from "@/utils/DescriptionFormat";
 import { FindMostRepeated } from "@/utils/FindMostRepeated";
+import { GrabIcon } from "@/utils/GrabIcon";
 
 export default function Home() {
+
 
   const [dayOne, setDayOne] = useState<boolean>(false);
   const [dayTwo, setDayTwo] = useState<boolean>(false);
@@ -30,7 +39,7 @@ export default function Home() {
   const [currentName, setCurrentName] = useState<string>('')
   const [currentWind, setCurrentWind] = useState<number>(0);
   const [currentHumidity, setCurrentHumidity] = useState<number>(0);
-  const [currentDayIcon, setCurrentDayIcon] = useState<string>('');
+  const [currentDayIcon, setCurrentDayIcon] = useState<any>(sun);
   const [farenheitBool, setFarenheitBool] = useState<boolean>(true);
   const [searchBool, setSearchBool] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
@@ -59,7 +68,7 @@ export default function Home() {
   const [firstDayMaxTemp, setFirstDayMaxTemp] = useState<number>(0);
   const [firstDayMinTemp, setFirstDayMinTemp] = useState<number>(0);
   const [firstDayTemp, setFirstDayTemp] = useState<number>(0);
-  const [firstDayIcon, setFirstDayIcon] = useState<string>('');
+  const [firstDayIcon, setFirstDayIcon] = useState<any>(sun);
   const [firstDayWind, setFirstDayWind] = useState<number>(0);
   const [firstDayHumidity, setFirstDayHumidity] = useState<number>(0);
   const [firstDayDescription, setFirstDayDescription] = useState<string>('');
@@ -68,7 +77,7 @@ export default function Home() {
   const [secondDayMaxTemp, setSecondDayMaxTemp] = useState<number>(0);
   const [secondDayMinTemp, setSecondDayMinTemp] = useState<number>(0);
   const [secondDayTemp, setSecondDayTemp] = useState<number>(0);
-  const [secondDayIcon, setSecondDayIcon] = useState<string>('');
+  const [secondDayIcon, setSecondDayIcon] = useState<any>(sun);
   const [secondDayWind, setSecondDayWind] = useState<number>(0);
   const [secondDayHumidity, setSecondDayHumidity] = useState<number>(0);
   const [secondDayDescription, setSecondDayDescription] = useState<string>('');
@@ -77,7 +86,7 @@ export default function Home() {
   const [thirdDayMaxTemp, setThirdDayMaxTemp] = useState<number>(0);
   const [thirdDayMinTemp, setThirdDayMinTemp] = useState<number>(0);
   const [thirdDayTemp, setThirdDayTemp] = useState<number>(0);
-  const [thirdDayIcon, setThirdDayIcon] = useState<string>('');
+  const [thirdDayIcon, setThirdDayIcon] = useState<any>(sun);
   const [thirdDayWind, setThirdDayWind] = useState<number>(0);
   const [thirdDayHumidity, setThirdDayHumidity] = useState<number>(0);
   const [thirdDayDescription, setThirdDayDescription] = useState<string>('');
@@ -86,7 +95,7 @@ export default function Home() {
   const [fourthDayMaxTemp, setFourthDayMaxTemp] = useState<number>(0);
   const [fourthDayMinTemp, setFourthDayMinTemp] = useState<number>(0);
   const [fourthDayTemp, setFourthDayTemp] = useState<number>(0);
-  const [fourthDayIcon, setFourthDayIcon] = useState<string>('');
+  const [fourthDayIcon, setFourthDayIcon] = useState<any>(sun);
   const [fourthDayWind, setFourthDayWind] = useState<number>(0);
   const [fourthDayHumidity, setFourthDayHumidity] = useState<number>(0);
   const [fourthDayDescription, setFourthDayDescription] = useState<string>('');
@@ -95,11 +104,13 @@ export default function Home() {
   const [fifthDayMaxTemp, setFifthDayMaxTemp] = useState<number>(0);
   const [fifthDayMinTemp, setFifthDayMinTemp] = useState<number>(0);
   const [fifthDayTemp, setFifthDayTemp] = useState<number>(0);
-  const [fifthDayIcon, setFifthDayIcon] = useState<string>('');
+  const [fifthDayIcon, setFifthDayIcon] = useState<any>(sun);
   const [fifthDayWind, setFifthDayWind] = useState<number>(0);
   const [fifthDayHumidity, setFifthDayHumidity] = useState<number>(0);
   const [fifthDayDescription, setFifthDayDescription] = useState<string>('');
-  
+
+  let iconArray: any[] = [sun, fewClouds, scatteredClouds, rain, thunder, snow, mist]
+  const [pastSearch, setPastSearch] = useState<boolean>(false);
 
 
   const handleFarenheit = () => {
@@ -144,14 +155,28 @@ export default function Home() {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === "Enter"){
+    if (e.key === "Enter") {
       setSearch(userInput, key)
       setUserInput("");
+      setPastSearch(false);
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
+  }
+
+  const handlePastSearchTrue = () => {
+    setPastSearch(true);
+  }
+
+  const handlePastSearchFalse = () => {
+    setPastSearch(false);
+  }
+
+  const handlePastSearchClick = () => {
+    setPastSearch(false);
+    setUserInput("");
   }
 
   const setInit = async (lat: any, long: any, key: string) => {
@@ -168,6 +193,7 @@ export default function Home() {
     let wind: number = data.wind.speed;
     let humidity: number = Math.floor(data.main.humidity);
     let name: string = data.name + ", " + data.sys.country;
+    let icon: string = data.weather[0].icon;
     setCurrentTemp(temp);
     setFarenheitTemp(temp);
     setCurrentMaxTemp(maxTemp);
@@ -178,6 +204,7 @@ export default function Home() {
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
+    setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
     let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
     let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
@@ -190,7 +217,7 @@ export default function Home() {
     setFirstDayName(GetWeekDays()[0]);
     setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
     setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
-    setFirstDayIcon(FindMostRepeated(firstDayIconArray));
+    setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
     setFirstDayWind(Math.max(...firstDayWindArray));
     setFirstDayHumidity(Math.max(...firstDayHumidityArray));
     setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
@@ -206,7 +233,7 @@ export default function Home() {
     setSecondDayName(GetWeekDays()[1]);
     setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
     setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
-    setSecondDayIcon(FindMostRepeated(secondDayIconArray));
+    setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
     setSecondDayWind(Math.max(...secondDayWindArray));
     setSecondDayHumidity(Math.max(...secondDayHumidityArray));
     setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
@@ -223,7 +250,7 @@ export default function Home() {
     setThirdDayName(GetWeekDays()[2]);
     setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
     setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
-    setThirdDayIcon(FindMostRepeated(thirdDayIconArray));
+    setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
     setThirdDayWind(Math.max(...thirdDayWindArray));
     setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
     setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
@@ -240,7 +267,7 @@ export default function Home() {
     setFourthDayName(GetWeekDays()[3]);
     setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
     setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
-    setFourthDayIcon(FindMostRepeated(fourthDayIconArray));
+    setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
     setFourthDayWind(Math.max(...fourthDayWindArray));
     setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
     setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
@@ -256,7 +283,7 @@ export default function Home() {
     setFifthDayName(GetWeekDays()[4]);
     setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
     setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
-    setFifthDayIcon(FindMostRepeated(fifthDayIconArray));
+    setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
     setFifthDayWind(Math.max(...fifthDayWindArray));
     setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
     setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
@@ -264,7 +291,7 @@ export default function Home() {
 
   const setSearch = async (city: string, key: string) => {
     let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
-    let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city,key);
+    let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
 
     // ALL OF CURRENT DAY DATA
     let maxTemp: number = Math.floor(data.main.temp_max);
@@ -274,6 +301,7 @@ export default function Home() {
     let wind: number = data.wind.speed;
     let humidity: number = Math.floor(data.main.humidity);
     let name: string = data.name + ", " + data.sys.country;
+    let icon: string = data.weather[0].icon;
     setCurrentTemp(temp);
     setFarenheitTemp(temp);
     setCurrentMaxTemp(maxTemp);
@@ -284,6 +312,7 @@ export default function Home() {
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
+    setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
     let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
     let firstDayMaxTempArray = firstDayData.map(data => data.main.temp_max);
@@ -296,7 +325,7 @@ export default function Home() {
     setFirstDayName(GetWeekDays()[0]);
     setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
     setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
-    setFirstDayIcon(FindMostRepeated(firstDayIconArray));
+    setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
     setFirstDayWind(Math.max(...firstDayWindArray));
     setFirstDayHumidity(Math.max(...firstDayHumidityArray));
     setFirstDayDescription(DescriptionFormat(FindMostRepeated(firstDayDescriptionArray)));
@@ -312,7 +341,7 @@ export default function Home() {
     setSecondDayName(GetWeekDays()[1]);
     setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
     setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
-    setSecondDayIcon(FindMostRepeated(secondDayIconArray));
+    setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
     setSecondDayWind(Math.max(...secondDayWindArray));
     setSecondDayHumidity(Math.max(...secondDayHumidityArray));
     setSecondDayDescription(DescriptionFormat(FindMostRepeated(secondDayDescriptionArray)));
@@ -329,7 +358,7 @@ export default function Home() {
     setThirdDayName(GetWeekDays()[2]);
     setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
     setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
-    setThirdDayIcon(FindMostRepeated(thirdDayIconArray));
+    setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
     setThirdDayWind(Math.max(...thirdDayWindArray));
     setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
     setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
@@ -346,7 +375,7 @@ export default function Home() {
     setFourthDayName(GetWeekDays()[3]);
     setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
     setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
-    setFourthDayIcon(FindMostRepeated(fourthDayIconArray));
+    setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
     setFourthDayWind(Math.max(...fourthDayWindArray));
     setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
     setFourthDayDescription(DescriptionFormat(FindMostRepeated(fourthDayDescriptionArray)));
@@ -362,7 +391,7 @@ export default function Home() {
     setFifthDayName(GetWeekDays()[4]);
     setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
     setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
-    setFifthDayIcon(FindMostRepeated(fifthDayIconArray));
+    setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
     setFifthDayWind(Math.max(...fifthDayWindArray));
     setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
     setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
@@ -392,12 +421,28 @@ export default function Home() {
       <div className="boxBg h-full w-full py-10 px-14 rounded-2xl">
 
         {/* First row of the page */}
-        <div className="grid xl:grid-cols-[52%_6%_42%] mb-8">
+        <div className="grid xl:grid-cols-[50%_6%_44%] mb-8">
 
           <div className="relative">
 
-            <input className="min-h-12 w-full rounded-[25px]" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput}/>
-            {/* <h2 className="min-h-12 bg-white absolute w-full">mf</h2> */}
+            <div className={pastSearch ? "flex inputBg inputRounded" : "flex inputBg rounded-3xl"}>
+              <img className="mx-3 hover:cursor-pointer" src={magnifyingGlass.src} alt="" />
+              <input className="min-h-12 w-full bg-transparent text-white josefin border-none text-xl focus:border-none" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput} onClick={handlePastSearchTrue} />
+              {pastSearch && <img className="mx-3 hover:cursor-pointer" src={x.src} alt="" onClick={handlePastSearchFalse} />}
+            </div>
+
+            {
+              pastSearch ? (
+                <div className="min-h-12 text-white josefin absolute w-full z-10 searchBg flex items-center hover:bg-gray-400 text-xl" onClick={handlePastSearchClick}>
+                  <img className="mx-3 hover:cursor-pointer" src={backArrow.src} alt="" />
+                  <p className="pl-3">mf</p>
+                  <div className="flex justify-end w-full">
+                    <img className="mx-3 hover:cursor-pointer" src={backArrow.src} alt="" />
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
 
           </div>
 
@@ -423,7 +468,7 @@ export default function Home() {
             {/* The first box */}
             <div className="p-8 boxTwoBg w-full rounded-3xl mb-20 relative">
 
-              <img className="absolute -left-12 -top-7 w-40" src={sun.src} alt="" />
+              <img className="absolute -left-12 -top-7 w-40" src={currentDayIcon.src} alt="" />
 
               <h1 className="josefin text-center text-white text-6xl font-bold mb-8">Current Weather</h1>
 
@@ -550,23 +595,23 @@ export default function Home() {
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={sun.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription}/>
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} />
 
             <hr className="my-7" />
 
-            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={sun.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription}/>
+            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} />
 
             <hr className="my-7" />
 
-            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={sun.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription}/>
+            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} />
 
             <hr className="my-7" />
 
-            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={sun.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription}/>
+            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} />
 
             <hr className="my-7" />
 
-            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={sun.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription}/>
+            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} />
 
           </div>
         </div>
