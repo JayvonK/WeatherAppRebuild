@@ -39,6 +39,7 @@ export default function Home() {
   const [dayFive, setDayFive] = useState<boolean>(false);
 
   const [currentName, setCurrentName] = useState<string>('')
+  const [currentCountry, setCurrentCountry] = useState<string>('');
   const [currentWind, setCurrentWind] = useState<number>(0);
   const [currentHumidity, setCurrentHumidity] = useState<number>(0);
   const [currentDayIcon, setCurrentDayIcon] = useState<any>(sun);
@@ -160,7 +161,7 @@ export default function Home() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setSearch(userInput, key)
+      searchForWeather(userInput, key)
       setUserInput("");
       setPastSearch(false);
     }
@@ -171,6 +172,7 @@ export default function Home() {
   }
 
   const handlePastSearchTrue = () => {
+    savePastSearchArray();
     setPastSearch(true);
   }
 
@@ -181,26 +183,54 @@ export default function Home() {
   const handlePastSearchClick = (city: string) => {
     setPastSearch(false);
     setUserInput("");
-    setSearch(city, key);
+    searchForWeather(city, key);
   }
 
   const handleFavoriteClick = () => {
-    if (!isFav) {
-      setIsFav(!isFav);
-      saveToFavorites(currentName);
-      let SearchVariable: [string, boolean] = [currentName, isFav];
-      checkPastSearch(SearchVariable);
-      grabLocalStorage();
-    } else {
+    if (isFav) {
       setIsFav(!isFav);
       removeFromFavorites(currentName);
       let SearchVariable: [string, boolean] = [currentName, isFav];
-      checkPastSearch(SearchVariable);
-      grabLocalStorage();
+      grabLocalStorage(currentName);
+    } else {
+      setIsFav(!isFav);
+      saveToFavorites(currentName);
+      let SearchVariable: [string, boolean] = [currentName, isFav];
+      grabLocalStorage(currentName);
     }
   }
 
-  const setInit = async (lat: any, long: any, key: string) => {
+  const handleSavePastSearchFav = (name: string) => {
+    saveToFavorites(name.toLowerCase());
+    grabLocalStorage(currentName.toLowerCase());
+  }
+
+  const handleRemovePastSearchFav = (name: string) => {
+    removeFromFavorites(name.toLowerCase());
+    grabLocalStorage(currentName.toLowerCase());
+  }
+
+  const grabLocalStorage = (name: string) => {
+    saveFavoriteArray();
+    savePastSearchArray();
+    if (getFavorites().includes(name.toLowerCase())) {
+      setIsFav(true);
+      console.log("im true");
+    } else {
+      setIsFav(false);
+    }
+  }
+
+  const savePastSearchArray = () => {
+    checkPastSearch();
+    setPastSearchArray(getPastSearches());
+  }
+
+  const saveFavoriteArray = () => {
+    setFavoritesArray(getFavorites());
+  }
+
+  const initWeatherCall = async (lat: any, long: any, key: string) => {
     let data: ICurrentDayData = await CurrentApiCall(lat, long, key);
     let FiveDayData: IFiveDayData = await FiveDayApiCall(lat, long, key);
     // let data: ICurrentDayData = currentWeatherData;
@@ -213,7 +243,8 @@ export default function Home() {
     let description: string = data.weather[0].description;
     let wind: number = data.wind.speed;
     let humidity: number = Math.floor(data.main.humidity);
-    let name: string = data.name + ", " + data.sys.country;
+    let name: string = data.name;
+    let country: string = data.sys.country;
     let icon: string = data.weather[0].icon;
     setCurrentTemp(temp);
     setFarenheitTemp(temp);
@@ -225,6 +256,7 @@ export default function Home() {
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
+    setCurrentCountry(country);
     setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
     let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
@@ -309,10 +341,10 @@ export default function Home() {
     setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
     setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
 
-    grabLocalStorage()
+    grabLocalStorage(name.toLowerCase())
   }
 
-  const setSearch = async (city: string, key: string) => {
+  const searchForWeather = async (city: string, key: string) => {
     try {
       let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
       let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
@@ -327,7 +359,8 @@ export default function Home() {
       let description: string = data.weather[0].description;
       let wind: number = data.wind.speed;
       let humidity: number = Math.floor(data.main.humidity);
-      let name: string = data.name + ", " + data.sys.country;
+      let name: string = data.name;
+      let country: string = data.sys.country;
       let icon: string = data.weather[0].icon;
       setCurrentTemp(temp);
       setFarenheitTemp(temp);
@@ -339,6 +372,7 @@ export default function Home() {
       setCurrentWind(wind);
       setCurrentHumidity(humidity);
       setCurrentName(name);
+      setCurrentCountry(country);
       setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
       let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
@@ -422,21 +456,13 @@ export default function Home() {
       setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
       setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
 
-      grabLocalStorage()
+      grabLocalStorage(name.toLowerCase());
     } catch (error) {
       alert("City Does Not Exist");
     }
-
   }
 
-  const grabLocalStorage = () => {
-    setPastSearchArray(getPastSearches());
-    setFavoritesArray(getFavorites());
-    if (getFavorites().includes(currentName.toLowerCase())) {
-      setIsFav(true);
-      console.log("im true");
-    }
-  }
+
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(success, error);
@@ -446,7 +472,7 @@ export default function Home() {
     }) {
       let lat = pos.coords.latitude;
       let long = pos.coords.longitude;
-      setInit(lat, long, key);
+      initWeatherCall(lat, long, key);
     }
 
     function error(error: { message: string }) {
@@ -476,12 +502,12 @@ export default function Home() {
               pastSearch ? (
                 <div className="absolute w-full z-10">
                   {
-                    pastSearchArray.length !== 0 && pastSearchArray.map(search => (
-                      <div className="min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl">
+                    pastSearchArray.length !== 0 && pastSearchArray.map((search, i) => (
+                      <div key={i} className="min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl">
                         <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
-                        <p className="pl-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])}>{search[0]}</p>
-                        <div className="flex justify-end w-full">
-                          {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" />)}
+                        <div className="flex justify-between w-full">
+                          <p className="pl-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])}>{search[0]}</p>
+                          {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
                         </div>
                       </div>
                     ))
@@ -522,9 +548,9 @@ export default function Home() {
               <h1 className="josefin text-center text-white text-6xl font-bold mb-8">Current Weather</h1>
 
               <div className="flex justify-center mb-8 gap-4">
-                <h3 className="text-white josefin text-4xl">{currentName!}</h3>
+                <h3 className="text-white josefin text-4xl">{currentName + ", " + currentCountry}</h3>
                 {isFav ? (
-                  <img className="hover: cursor-pointer pb-2" src={star.src} alt="" onClick={handleFavoriteClick}/>
+                  <img className="hover: cursor-pointer pb-2" src={star.src} alt="" onClick={handleFavoriteClick} />
                 ) : (
                   <img className="hover: cursor-pointer pb-2" src={starOutline.src} alt="" onClick={handleFavoriteClick} />
                 )

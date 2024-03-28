@@ -19,7 +19,7 @@ export const saveToPastSearches = (search: [string, boolean]) => {
     }
   }
   if(!same){
-    past.push(search);
+    past.unshift(search);
   }
 
   localStorage.setItem("WeatherAppPastSearches", JSON.stringify(past));
@@ -35,11 +35,14 @@ export const removeFromPastSearches = (search: [string, boolean]) => {
   localStorage.setItem("WeatherAppPastSearches", JSON.stringify(past));
 };
 
-export const checkPastSearch = (search: [string, boolean]) => {
+export const checkPastSearch = () => {
     let past: [string, boolean][] = getPastSearches();
+    let pastfav: string[] = getFavorites();
     for(let i = 0; i < past.length; i++){
-        if(past[i][0] === search[0] && past[i][1] !== search[1]){
-            past[i][1] = search[1]
+        if(pastfav.includes(past[i][0])){
+            past[i][1] = true;
+        } else{
+          past[i][1] = false;
         }
     }
     localStorage.setItem("WeatherAppPastSearches", JSON.stringify(past));
@@ -66,7 +69,7 @@ export const saveToFavorites = (name: string) => {
 export const removeFromFavorites = (name: string) => {
   let past: string[] = getFavorites();
 
-  let index = past.indexOf(name);
+  let index = past.indexOf(name.toLowerCase());
 
   past.splice(index, 1);
 
