@@ -92,7 +92,7 @@ const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weather
             </div>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-[35%_55%_10%] grid-cols-[45%_45%_10%]" >
+          <div className="grid sm:grid-cols-[35%_55%_10%] grid-cols-[40%_40%_20%]" >
             {/* Week day */}
             <div className="flex justify-between items-center">
               <h3 className="josefin 2xl:text-[40px] sm:text-4xl text-3xl text-white">{props.dayName}</h3>

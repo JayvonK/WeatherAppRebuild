@@ -560,12 +560,15 @@ export default function Home() {
         {/* First row of the page */}
         <div className="grid xl:grid-cols-[50%_6%_44%] mb-8">
 
-          <div className="flex justify-between">
+          <div className="sm:flex sm:justify-between">
+          <div className="w-[48px] h-12 p-1 bg-[#38598B] hover:bg-[#61BAC7] rounded-full sm:ml-6 sm:hidden justify-center items-center hover:cursor-pointer flex mb-6" onClick={handleFavActive} >
+              <img src={star.src} alt="" />
+            </div>
             <div className="relative w-full">
               <div className={pastSearch !== favActive ? "flex inputBg inputRounded w-full" : "flex inputBg rounded-3xl w-full"}>
-                <img className="mr-3 ml-5 hover:cursor-pointer" src={magnifyingGlass.src} alt="" onClick={handleSearchButton} />
+                <img className="sm:mr-3 sm:ml-3 ml-2 hover:cursor-pointer" src={magnifyingGlass.src} alt="" onClick={handleSearchButton} />
                 <input className="sm:min-h-12 min-h-10 w-full bg-transparent text-white josefin border-none sm:text-xl text-lg focus:border-none" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput} onClick={handlePastSearchTrue} />
-                {pastSearch ? (<img className="mx-3 hover:cursor-pointer" src={x.src} alt="" onClick={handlePastSearchFalse} />) : (<div></div>)}
+                {pastSearch ? (<img className="mr-3 hover:cursor-pointer" src={x.src} alt="" onClick={handlePastSearchFalse} />) : (<div></div>)}
               </div>
               {
                 pastSearch && !favActive ? (
@@ -574,10 +577,10 @@ export default function Home() {
                       pastSearchArray.length !== 0 ? (pastSearchArray.map((search, i) => {
                         if (pastSearchArray.length < 6) {
                           return (
-                            <div key={i} className={i === pastSearchArray.length - 1 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl"}>
-                              <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
+                            <div key={i} className={i === pastSearchArray.length - 1 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 sm:text-xl text-lg bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 sm:text-xl text-lg"}>
+                              <img className="sm:mx-3 mx-2 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
                               <div className="flex justify-between w-full">
-                                <p className="pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
+                                <p className="sm:pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
                                 {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
                               </div>
                             </div>
@@ -585,10 +588,10 @@ export default function Home() {
                         } else {
                           if (i >= 0 && i < 6) {
                             return (
-                              <div key={i} className={i === 5 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl"}>
-                                <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
+                              <div key={i} className={i === 5 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 sm:text-xl text-lg bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 sm:text-xl text-lg"}>
+                                <img className="sm:mx-3 mx-2 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
                                 <div className="flex justify-between w-full">
-                                  <p className="pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
+                                  <p className="sm:pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
                                   {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
                                 </div>
                               </div>
@@ -597,8 +600,8 @@ export default function Home() {
                         }
                       })) : (
                         <div className="min-h-12 text-white josefin w-full searchBg text-xl flex items-center bottomRadius">
-                        <h1 className="pl-16 ">No Past History</h1>
-                      </div>
+                          <h1 className="pl-16 ">No Past History</h1>
+                        </div>
                       )
                     }
 
@@ -623,7 +626,7 @@ export default function Home() {
                         return (
                           <div key={i} className={i === favoritesArray.length - 1 ? "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl"}>
                             <div className="flex justify-between w-full">
-                              <p className="pl-5 hover:cursor-pointer" onClick={() => handlePastSearchClick(fav)}>{CityNameFormat(fav) }</p>
+                              <p className="pl-5 hover:cursor-pointer" onClick={() => handlePastSearchClick(fav)}>{CityNameFormat(fav)}</p>
                               <img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemoveFav(fav)} />
                             </div>
                           </div>
@@ -638,7 +641,7 @@ export default function Home() {
               }
             </div>
 
-            <div className="w-[52px] h-12 p-1 bg-[#38598B] hover:bg-[#61BAC7] rounded-full ml-8 flex justify-center items-center hover:cursor-pointer" onClick={handleFavActive} >
+            <div className="w-[52px] h-12 p-1 bg-[#38598B] hover:bg-[#61BAC7] rounded-full sm:ml-6 sm:flex justify-center items-center hover:cursor-pointer hidden" onClick={handleFavActive} >
               <img src={star.src} alt="" />
             </div>
 
@@ -674,7 +677,7 @@ export default function Home() {
               <div className="flex justify-center mb-8 gap-4">
                 <h3 className="text-white text-center josefin sm:leading-normal md:mt-0 md:font-normal md:text-4xl sm:text-5xl text-3xl mt-10 font-bold">{currentName}</h3>
                 {isFav ? (
-                  <img className="hover: cursor-pointer pb-2 md:relative absolute right-0" src={star.src} alt="" onClick={handleFavoriteClick} />
+                  <img className="hover: cursor-pointer pb-2 md:relative absolute right-4 top-4" src={star.src} alt="" onClick={handleFavoriteClick} />
                 ) : (
                   <img className="hover: cursor-pointer pb-2 md:relative absolute right-4 top-4" src={starOutline.src} alt="" onClick={handleFavoriteClick} />
                 )
