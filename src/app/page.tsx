@@ -24,10 +24,10 @@ import WeatherDataCopy from '@/utils/WeatherCopy.json';
 import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
 import { GetDayOfWeek, GetWeekDays } from "@/utils/GetDaysOfWeek";
-import { DescriptionFormat } from "@/utils/DescriptionFormat";
+import { CityNameFormat, DescriptionFormat } from "@/utils/DescriptionFormat";
 import { FindMostRepeated } from "@/utils/FindMostRepeated";
 import { GrabIcon } from "@/utils/GrabIcon";
-import { checkPastSearch, getFavorites, getPastSearches, removeFromFavorites, saveToFavorites, saveToPastSearches } from "@/utils/HandleLocalStorage";
+import { checkPastSearch, getFavorites, getPastSearches, removeFromFavorites, removeFromPastSearches, saveToFavorites, saveToPastSearches } from "@/utils/HandleLocalStorage";
 
 export default function Home() {
 
@@ -57,8 +57,10 @@ export default function Home() {
 
 
   const [currentDescription, setCurrentDescription] = useState<string>('');
-  const [farenheitClass, setFarenheitClass] = useState<string>('text-6xl text-white')
-  const [celciusClass, setCelciusClass] = useState<string>('text-5xl tempGray');
+  const [farenheitClass, setFarenheitClass] = useState<string>('sm:text-6xl text-white text-4xl')
+  const [celciusClass, setCelciusClass] = useState<string>('sm:text-5xl tempGray text-3xl');
+  const [farenheitClass2, setFarenheitClass2] = useState<string>('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white')
+  const [celciusClass2, setCelciusClass2] = useState<string>('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
   const [degreeSymbol, setDegreeSymbol] = useState<string>('F');
   const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>(WeatherDataCopy);
   // const [currentLong, setCurrentLong] = useState('-121.275604');
@@ -69,6 +71,8 @@ export default function Home() {
   const [firstDayName, setFirstDayName] = useState<string>('');
   const [firstDayMaxTemp, setFirstDayMaxTemp] = useState<number>(0);
   const [firstDayMinTemp, setFirstDayMinTemp] = useState<number>(0);
+  const [staticFirstDayMaxTemp, setStaticFirstDayMaxTemp] = useState<number>(0);
+  const [staticFirstDayMinTemp, setStaticFirstDayMinTemp] = useState<number>(0);
   const [firstDayTemp, setFirstDayTemp] = useState<number>(0);
   const [firstDayIcon, setFirstDayIcon] = useState<any>(sun);
   const [firstDayWind, setFirstDayWind] = useState<number>(0);
@@ -78,6 +82,8 @@ export default function Home() {
   const [secondDayName, setSecondDayName] = useState<string>('');
   const [secondDayMaxTemp, setSecondDayMaxTemp] = useState<number>(0);
   const [secondDayMinTemp, setSecondDayMinTemp] = useState<number>(0);
+  const [staticSecondDayMaxTemp, setStaticSecondDayMaxTemp] = useState<number>(0);
+  const [staticSecondDayMinTemp, setStaticSecondDayMinTemp] = useState<number>(0);
   const [secondDayTemp, setSecondDayTemp] = useState<number>(0);
   const [secondDayIcon, setSecondDayIcon] = useState<any>(sun);
   const [secondDayWind, setSecondDayWind] = useState<number>(0);
@@ -87,6 +93,8 @@ export default function Home() {
   const [thirdDayName, setThirdDayName] = useState<string>('');
   const [thirdDayMaxTemp, setThirdDayMaxTemp] = useState<number>(0);
   const [thirdDayMinTemp, setThirdDayMinTemp] = useState<number>(0);
+  const [staticThirdDayMaxTemp, setStaticThirdDayMaxTemp] = useState<number>(0);
+  const [staticThirdDayMinTemp, setStaticThirdDayMinTemp] = useState<number>(0);
   const [thirdDayTemp, setThirdDayTemp] = useState<number>(0);
   const [thirdDayIcon, setThirdDayIcon] = useState<any>(sun);
   const [thirdDayWind, setThirdDayWind] = useState<number>(0);
@@ -96,6 +104,8 @@ export default function Home() {
   const [fourthDayName, setFourthDayName] = useState<string>('');
   const [fourthDayMaxTemp, setFourthDayMaxTemp] = useState<number>(0);
   const [fourthDayMinTemp, setFourthDayMinTemp] = useState<number>(0);
+  const [staticFourthDayMaxTemp, setStaticFourthDayMaxTemp] = useState<number>(0);
+  const [staticFourthDayMinTemp, setStaticFourthDayMinTemp] = useState<number>(0);
   const [fourthDayTemp, setFourthDayTemp] = useState<number>(0);
   const [fourthDayIcon, setFourthDayIcon] = useState<any>(sun);
   const [fourthDayWind, setFourthDayWind] = useState<number>(0);
@@ -105,6 +115,8 @@ export default function Home() {
   const [fifthDayName, setFifthDayName] = useState<string>('');
   const [fifthDayMaxTemp, setFifthDayMaxTemp] = useState<number>(0);
   const [fifthDayMinTemp, setFifthDayMinTemp] = useState<number>(0);
+  const [staticFifthDayMaxTemp, setStaticFifthDayMaxTemp] = useState<number>(0);
+  const [staticFifthDayMinTemp, setStaticFifthDayMinTemp] = useState<number>(0);
   const [fifthDayTemp, setFifthDayTemp] = useState<number>(0);
   const [fifthDayIcon, setFifthDayIcon] = useState<any>(sun);
   const [fifthDayWind, setFifthDayWind] = useState<number>(0);
@@ -116,27 +128,55 @@ export default function Home() {
   const [pastSearchArray, setPastSearchArray] = useState<string[]>([]);
   const [favoritesArray, setFavoritesArray] = useState<string[]>([]);
   const [isFav, setIsFav] = useState<boolean>(false);
+  const [favActive, setFavActive] = useState<boolean>(false);
+
 
 
   const handleFarenheit = () => {
     setFarenheitBool(true);
-    setFarenheitClass('text-6xl text-white');
-    setCelciusClass('text-5xl tempGray');
+    setFarenheitClass('sm:text-6xl text-white text-4xl');
+    setCelciusClass('sm:text-5xl tempGray text-3xl');
+    setFarenheitClass2('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white');
+    setCelciusClass2('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
     setDegreeSymbol('F');
     setCurrentTemp(farenheitTemp);
     setCurrentMaxTemp(farenheitMaxTemp);
     setCurrentMinTemp(farenheitMinTemp);
+
+    setFirstDayMaxTemp(staticFirstDayMaxTemp);
+    setFirstDayMinTemp(staticFirstDayMinTemp);
+    setSecondDayMaxTemp(staticSecondDayMaxTemp);
+    setSecondDayMinTemp(staticSecondDayMinTemp);
+    setThirdDayMaxTemp(staticThirdDayMaxTemp);
+    setThirdDayMinTemp(staticThirdDayMinTemp);
+    setFourthDayMaxTemp(staticFourthDayMaxTemp);
+    setFourthDayMinTemp(staticFourthDayMinTemp);
+    setFifthDayMaxTemp(staticFifthDayMaxTemp);
+    setFifthDayMinTemp(staticFifthDayMinTemp);
   }
 
   const handleCelcius = () => {
     setFarenheitBool(false);
-    setCelciusClass('text-6xl text-white');
-    setFarenheitClass('text-5xl tempGray');
+    setCelciusClass('sm:text-6xl text-white text-4xl');
+    setFarenheitClass('sm:text-5xl tempGray text-3xl');
+    setFarenheitClass2('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
+    setCelciusClass2('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white');
     setDegreeSymbol('C');
     console.log(currentWeatherData);
     setCurrentTemp(ConvertToCelsius(currentTemp));
     setCurrentMaxTemp(ConvertToCelsius(currentMaxTemp));
     setCurrentMinTemp(ConvertToCelsius(currentMinTemp));
+
+    setFirstDayMaxTemp(ConvertToCelsius(firstDayMaxTemp));
+    setFirstDayMinTemp(ConvertToCelsius(firstDayMinTemp));
+    setSecondDayMaxTemp(ConvertToCelsius(secondDayMaxTemp));
+    setSecondDayMinTemp(ConvertToCelsius(secondDayMinTemp));
+    setThirdDayMaxTemp(ConvertToCelsius(thirdDayMaxTemp));
+    setThirdDayMinTemp(ConvertToCelsius(thirdDayMinTemp));
+    setFourthDayMaxTemp(ConvertToCelsius(fourthDayMaxTemp));
+    setFourthDayMinTemp(ConvertToCelsius(fourthDayMinTemp));
+    setFifthDayMaxTemp(ConvertToCelsius(fifthDayMaxTemp));
+    setFifthDayMinTemp(ConvertToCelsius(fifthDayMinTemp));
   }
 
   const handleDayOne = () => {
@@ -167,6 +207,12 @@ export default function Home() {
     }
   }
 
+  const handleSearchButton = () => {
+    searchForWeather(userInput, key)
+    setUserInput("");
+    setPastSearch(false);
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   }
@@ -174,10 +220,16 @@ export default function Home() {
   const handlePastSearchTrue = () => {
     savePastSearchArray();
     setPastSearch(true);
+    setFavActive(false);
   }
 
   const handlePastSearchFalse = () => {
     setPastSearch(false);
+  }
+
+  const handleFavActive = () => {
+    handlePastSearchFalse();
+    setFavActive(!favActive);
   }
 
   const handlePastSearchClick = (city: string) => {
@@ -200,6 +252,11 @@ export default function Home() {
     }
   }
 
+  const handleRemoveFav = (name: string) => {
+    removeFromFavorites(name);
+    grabLocalStorage(currentName.toLowerCase());
+  }
+
   const handleSavePastSearchFav = (name: string) => {
     saveToFavorites(name.toLowerCase());
     grabLocalStorage(currentName.toLowerCase());
@@ -215,7 +272,6 @@ export default function Home() {
     savePastSearchArray();
     if (getFavorites().includes(name.toLowerCase())) {
       setIsFav(true);
-      console.log("im true");
     } else {
       setIsFav(false);
     }
@@ -243,8 +299,7 @@ export default function Home() {
     let description: string = data.weather[0].description;
     let wind: number = data.wind.speed;
     let humidity: number = Math.floor(data.main.humidity);
-    let name: string = data.name;
-    let country: string = data.sys.country;
+    let name: string = data.name + ", " + data.sys.country;
     let icon: string = data.weather[0].icon;
     setCurrentTemp(temp);
     setFarenheitTemp(temp);
@@ -256,7 +311,6 @@ export default function Home() {
     setCurrentWind(wind);
     setCurrentHumidity(humidity);
     setCurrentName(name);
-    setCurrentCountry(country);
     setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
     let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
@@ -270,6 +324,8 @@ export default function Home() {
     setFirstDayName(GetWeekDays()[0]);
     setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
     setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
+    setStaticFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
+    setStaticFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
     setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
     setFirstDayWind(Math.max(...firstDayWindArray));
     setFirstDayHumidity(Math.max(...firstDayHumidityArray));
@@ -286,6 +342,8 @@ export default function Home() {
     setSecondDayName(GetWeekDays()[1]);
     setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
     setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
+    setStaticSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
+    setStaticSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
     setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
     setSecondDayWind(Math.max(...secondDayWindArray));
     setSecondDayHumidity(Math.max(...secondDayHumidityArray));
@@ -303,6 +361,8 @@ export default function Home() {
     setThirdDayName(GetWeekDays()[2]);
     setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
     setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
+    setStaticThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
+    setStaticThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
     setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
     setThirdDayWind(Math.max(...thirdDayWindArray));
     setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
@@ -320,6 +380,8 @@ export default function Home() {
     setFourthDayName(GetWeekDays()[3]);
     setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
     setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
+    setStaticFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
+    setStaticFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
     setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
     setFourthDayWind(Math.max(...fourthDayWindArray));
     setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
@@ -335,7 +397,9 @@ export default function Home() {
 
     setFifthDayName(GetWeekDays()[4]);
     setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
+    setStaticFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
     setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
+    setStaticFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
     setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
     setFifthDayWind(Math.max(...fifthDayWindArray));
     setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
@@ -349,9 +413,6 @@ export default function Home() {
       let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
       let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
 
-      let theSearch: [string, boolean] = [city, isFav];
-      saveToPastSearches(theSearch);
-
       // ALL OF CURRENT DAY DATA
       let maxTemp: number = Math.floor(data.main.temp_max);
       let temp: number = Math.floor(data.main.temp);
@@ -359,8 +420,7 @@ export default function Home() {
       let description: string = data.weather[0].description;
       let wind: number = data.wind.speed;
       let humidity: number = Math.floor(data.main.humidity);
-      let name: string = data.name;
-      let country: string = data.sys.country;
+      let name: string = data.name + ", " + data.sys.country;
       let icon: string = data.weather[0].icon;
       setCurrentTemp(temp);
       setFarenheitTemp(temp);
@@ -372,7 +432,6 @@ export default function Home() {
       setCurrentWind(wind);
       setCurrentHumidity(humidity);
       setCurrentName(name);
-      setCurrentCountry(country);
       setCurrentDayIcon(iconArray[GrabIcon(icon)])
 
       let firstDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[0]);
@@ -386,6 +445,8 @@ export default function Home() {
       setFirstDayName(GetWeekDays()[0]);
       setFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
       setFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
+      setStaticFirstDayMaxTemp(Math.floor(Math.max(...firstDayMaxTempArray)));
+      setStaticFirstDayMinTemp(Math.floor(Math.min(...firstDayMinTempArray)));
       setFirstDayIcon(iconArray[GrabIcon(FindMostRepeated(firstDayIconArray))]);
       setFirstDayWind(Math.max(...firstDayWindArray));
       setFirstDayHumidity(Math.max(...firstDayHumidityArray));
@@ -402,6 +463,8 @@ export default function Home() {
       setSecondDayName(GetWeekDays()[1]);
       setSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
       setSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
+      setStaticSecondDayMaxTemp(Math.floor(Math.max(...secondDayMaxTempArray)));
+      setStaticSecondDayMinTemp(Math.floor(Math.min(...secondDayMinTempArray)));
       setSecondDayIcon(iconArray[GrabIcon(FindMostRepeated(secondDayIconArray))]);
       setSecondDayWind(Math.max(...secondDayWindArray));
       setSecondDayHumidity(Math.max(...secondDayHumidityArray));
@@ -418,11 +481,12 @@ export default function Home() {
       setThirdDayName(GetWeekDays()[2]);
       setThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
       setThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
+      setStaticThirdDayMaxTemp(Math.floor(Math.max(...thirdDayMaxTempArray)));
+      setStaticThirdDayMinTemp(Math.floor(Math.min(...thirdDayMinTempArray)));
       setThirdDayIcon(iconArray[GrabIcon(FindMostRepeated(thirdDayIconArray))]);
       setThirdDayWind(Math.max(...thirdDayWindArray));
       setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
       setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
-
 
       let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
       let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
@@ -435,6 +499,8 @@ export default function Home() {
       setFourthDayName(GetWeekDays()[3]);
       setFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
       setFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
+      setStaticFourthDayMaxTemp(Math.floor(Math.max(...fourthDayMaxTempArray)));
+      setStaticFourthDayMinTemp(Math.floor(Math.min(...fourthDayMinTempArray)));
       setFourthDayIcon(iconArray[GrabIcon(FindMostRepeated(fourthDayIconArray))]);
       setFourthDayWind(Math.max(...fourthDayWindArray));
       setFourthDayHumidity(Math.max(...fourthDayHumidityArray));
@@ -450,19 +516,23 @@ export default function Home() {
 
       setFifthDayName(GetWeekDays()[4]);
       setFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
+      setStaticFifthDayMaxTemp(Math.floor(Math.max(...fifthDayMaxTempArray)));
       setFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
+      setStaticFifthDayMinTemp(Math.floor(Math.min(...fifthDayMinTempArray)));
       setFifthDayIcon(iconArray[GrabIcon(FindMostRepeated(fifthDayIconArray))]);
       setFifthDayWind(Math.max(...fifthDayWindArray));
       setFifthDayHumidity(Math.max(...fifthDayHumidityArray));
       setFifthDayDescription(DescriptionFormat(FindMostRepeated(fifthDayDescriptionArray)));
 
+      let theSearch: [string, boolean] = [name.toLowerCase(), isFav];
+      saveToPastSearches(theSearch);
+
       grabLocalStorage(name.toLowerCase());
     } catch (error) {
+      removeFromPastSearches([city.toLowerCase(), false]);
       alert("City Does Not Exist");
     }
   }
-
-
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(success, error);
@@ -476,7 +546,7 @@ export default function Home() {
     }
 
     function error(error: { message: string }) {
-      // setCurrentWeatherData(await CurrentApiCall());
+      initWeatherCall(34.0549, 118.2426, key);
       console.log(error.message);
     }
 
@@ -484,40 +554,94 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="min-h-screen weatherBg px-16 py-8">
-      <div className="boxBg h-full w-full py-10 px-14 rounded-2xl">
+    <div className="min-h-screen weatherBg sm:px-16 sm:py-8 py-6 px-6">
+      <div className="boxBg h-full w-full xl:py-10 xl:px-14 px-4 py-4 rounded-2xl">
 
         {/* First row of the page */}
         <div className="grid xl:grid-cols-[50%_6%_44%] mb-8">
 
-          <div className="relative">
+          <div className="flex justify-between">
+            <div className="relative w-full">
+              <div className={pastSearch !== favActive ? "flex inputBg inputRounded w-full" : "flex inputBg rounded-3xl w-full"}>
+                <img className="mr-3 ml-5 hover:cursor-pointer" src={magnifyingGlass.src} alt="" onClick={handleSearchButton} />
+                <input className="sm:min-h-12 min-h-10 w-full bg-transparent text-white josefin border-none sm:text-xl text-lg focus:border-none" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput} onClick={handlePastSearchTrue} />
+                {pastSearch ? (<img className="mx-3 hover:cursor-pointer" src={x.src} alt="" onClick={handlePastSearchFalse} />) : (<div></div>)}
+              </div>
+              {
+                pastSearch && !favActive ? (
+                  <div className="absolute w-full z-30">
+                    {
+                      pastSearchArray.length !== 0 ? (pastSearchArray.map((search, i) => {
+                        if (pastSearchArray.length < 6) {
+                          return (
+                            <div key={i} className={i === pastSearchArray.length - 1 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl"}>
+                              <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
+                              <div className="flex justify-between w-full">
+                                <p className="pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
+                                {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
+                              </div>
+                            </div>
+                          )
+                        } else {
+                          if (i >= 0 && i < 6) {
+                            return (
+                              <div key={i} className={i === 5 ? "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl"}>
+                                <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
+                                <div className="flex justify-between w-full">
+                                  <p className="pl-3 hover:cursor-pointer w-full" onClick={() => handlePastSearchClick(search[0])}>{CityNameFormat(search[0])}</p>
+                                  {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
+                                </div>
+                              </div>
+                            )
+                          }
+                        }
+                      })) : (
+                        <div className="min-h-12 text-white josefin w-full searchBg text-xl flex items-center bottomRadius">
+                        <h1 className="pl-16 ">No Past History</h1>
+                      </div>
+                      )
+                    }
 
-            <div className={pastSearch ? "flex inputBg inputRounded" : "flex inputBg rounded-3xl"}>
-              <img className="mx-3 hover:cursor-pointer" src={magnifyingGlass.src} alt="" />
-              <input className="min-h-12 w-full bg-transparent text-white josefin border-none text-xl focus:border-none" onChange={handleChange} onKeyDown={handleKeyDown} type="text" placeholder="Search for a city" value={userInput} onClick={handlePastSearchTrue} />
-              {pastSearch && <img className="mx-3 hover:cursor-pointer" src={x.src} alt="" onClick={handlePastSearchFalse} />}
+                  </div>
+                ) : (
+                  <div></div>
+                )
+              }
+              {
+                !pastSearch && favActive ? (
+                  <div className="absolute w-full z-30 max-h-52 overflow-y-scroll">
+                    <div className="min-h-12 text-yellow-200 josefin w-full searchBg font-bold text-xl flex items-center">
+                      <h1 className="pl-5">Favorite Locations</h1>
+                    </div>
+                    {favoritesArray.length === 0 ? (
+                      <div className="min-h-12 text-white josefin w-full searchBg text-xl flex items-center bottomRadius">
+                        <h1 className="pl-5 ">No favorites</h1>
+                      </div>
+                    ) : (<div></div>)}
+                    {
+                      favoritesArray.map((fav, i) => {
+                        return (
+                          <div key={i} className={i === favoritesArray.length - 1 ? "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl"}>
+                            <div className="flex justify-between w-full">
+                              <p className="pl-5 hover:cursor-pointer" onClick={() => handlePastSearchClick(fav)}>{CityNameFormat(fav) }</p>
+                              <img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemoveFav(fav)} />
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+
+                  </div>
+                ) : (
+                  <div></div>
+                )
+              }
             </div>
 
-            {
-              pastSearch ? (
-                <div className="absolute w-full z-10">
-                  {
-                    pastSearchArray.length !== 0 && pastSearchArray.map((search, i) => (
-                      <div key={i} className="min-h-12 text-white josefin w-full  searchBg flex items-center hover:bg-gray-400 text-xl">
-                        <img className="mx-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])} src={backArrow.src} alt="" />
-                        <div className="flex justify-between w-full">
-                          <p className="pl-3 hover:cursor-pointer" onClick={() => handlePastSearchClick(search[0])}>{search[0]}</p>
-                          {search[1] ? (<img className="mx-3 hover:cursor-pointer" src={star.src} alt="" onClick={() => handleRemovePastSearchFav(search[0])} />) : (<img className="mx-3 hover:cursor-pointer" src={starOutline.src} alt="" onClick={() => handleSavePastSearchFav(search[0])} />)}
-                        </div>
-                      </div>
-                    ))
-                  }
+            <div className="w-[52px] h-12 p-1 bg-[#38598B] hover:bg-[#61BAC7] rounded-full ml-8 flex justify-center items-center hover:cursor-pointer" onClick={handleFavActive} >
+              <img src={star.src} alt="" />
+            </div>
 
-                </div>
-              ) : (
-                <div></div>
-              )
-            }
 
           </div>
 
@@ -536,44 +660,44 @@ export default function Home() {
         {/* Second Row of the page */}
 
         {/* The First Column, CURRENT WEATHER*/}
-        <div className="grid xl:grid-cols-[50%_6%_44%]">
+        <div className="grid xl:grid-cols-[50%_6%_44%] ">
 
           <div>
 
             {/* The first box */}
-            <div className="p-8 boxTwoBg w-full rounded-3xl mb-20 relative">
+            <div className="sm:p-8 p-4 boxTwoBg w-full rounded-3xl sm:mb-20 mb-10 relative">
 
-              <img className="absolute -left-12 -top-7 w-40" src={currentDayIcon.src} alt="" />
+              <img className="absolute sm:-left-12 sm:-top-7 lg:w-40 sm:w-32 w-24 -left-8 -top-3" src={currentDayIcon.src} alt="" />
 
-              <h1 className="josefin text-center text-white text-6xl font-bold mb-8">Current Weather</h1>
+              <h1 className="josefin text-center text-white lg:text-6xl text-5xl font-bold mb-8 z-20 relative px-10 sm:leading-normal md:block hidden">Current Weather</h1>
 
               <div className="flex justify-center mb-8 gap-4">
-                <h3 className="text-white josefin text-4xl">{currentName + ", " + currentCountry}</h3>
+                <h3 className="text-white text-center josefin sm:leading-normal md:mt-0 md:font-normal md:text-4xl sm:text-5xl text-3xl mt-10 font-bold">{currentName}</h3>
                 {isFav ? (
-                  <img className="hover: cursor-pointer pb-2" src={star.src} alt="" onClick={handleFavoriteClick} />
+                  <img className="hover: cursor-pointer pb-2 md:relative absolute right-0" src={star.src} alt="" onClick={handleFavoriteClick} />
                 ) : (
-                  <img className="hover: cursor-pointer pb-2" src={starOutline.src} alt="" onClick={handleFavoriteClick} />
+                  <img className="hover: cursor-pointer pb-2 md:relative absolute right-4 top-4" src={starOutline.src} alt="" onClick={handleFavoriteClick} />
                 )
                 }
               </div>
 
-              <div className="mb-10 flex justify-center">
-                <h1 className="josefin text-9xl text-center text-white">{currentTemp}</h1>
-                <div className="flex ml-4 h-14">
+              <div className="sm:mb-10 mb-6 flex justify-center">
+                <h1 className="josefin sm:text-9xl text-7xl text-center text-white">{currentTemp}</h1>
+                <div className="flex ml-4 sm:h-14 h-8">
                   <h2 className={"josefin hover:text-white hover:cursor-pointer fontTransition " + farenheitClass} onClick={handleFarenheit}>°F</h2>
                   <div className="line mx-3"></div>
                   <h2 className={"josefin hover:text-white hover:cursor-pointer fontTransition " + celciusClass} onClick={handleCelcius}>°C</h2>
                 </div>
               </div>
 
-              <h1 className="text-white josefin text-5xl text-center mb-4">{currentDescription}</h1>
+              <h1 className="text-white josefin sm:text-5xl text-3xl text-center mb-4">{currentDescription}</h1>
 
             </div>
 
 
             {/* Other info max temp, low temp, etc */}
 
-            <div className="px-3 mb-14">
+            <div className="sm:px-3 xl:mb-14 sm:mb-20 mb-14">
               <div className="grid 2xl:grid-cols-2 2xl:gap-0 xl:gap-8 xl:grid-cols-1 lg:grid-cols-2 gap-8">
 
                 <div className="grid grid-rows-2 gap-8">
@@ -582,15 +706,15 @@ export default function Home() {
 
                     <div className="flex justify-end">
                       <div className="flex items-center">
-                        <p className="josefin text-white text-3xl">Max</p>
-                        <img className="ml-3" src={thermometer.src} alt="" />
+                        <p className="josefin text-white sm:text-3xl text-2xl">Max</p>
+                        <img className="ml-3 sm:block hidden" src={thermometer.src} alt="" />
                       </div>
                     </div>
                     <div className="flex justify-center">
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentMaxTemp + "°" + degreeSymbol}</p>
+                      <p className="josefin text-white sm:text-3xl text-2xl">{currentMaxTemp + "°" + degreeSymbol}</p>
                     </div>
 
                   </div>
@@ -600,15 +724,15 @@ export default function Home() {
 
                     <div className="flex justify-end">
                       <div className="flex items-center">
-                        <p className="josefin text-white text-3xl">Wind</p>
-                        <img className="ml-3" src={thermometer.src} alt="" />
+                        <p className="josefin text-white sm:text-3xl text-2xl">Wind</p>
+                        <img className="ml-3 sm:block hidden" src={thermometer.src} alt="" />
                       </div>
                     </div>
                     <div className="flex justify-center">
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentWind + 'm/s'}</p>
+                      <p className="josefin text-white sm:text-3xl text-2xl">{currentWind + 'm/s'}</p>
                     </div>
 
                   </div>
@@ -620,15 +744,15 @@ export default function Home() {
 
                     <div className="flex justify-end">
                       <div className="flex items-center">
-                        <p className="josefin text-white text-3xl">Min</p>
-                        <img className="ml-3" src={thermometer.src} alt="" />
+                        <p className="josefin text-white sm:text-3xl text-2xl">Min</p>
+                        <img className="ml-3 sm:block hidden" src={thermometer.src} alt="" />
                       </div>
                     </div>
                     <div className="flex justify-center">
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentMinTemp + "°" + degreeSymbol}</p>
+                      <p className="josefin text-white sm:text-3xl text-2xl">{currentMinTemp + "°" + degreeSymbol}</p>
                     </div>
                   </div>
 
@@ -637,15 +761,15 @@ export default function Home() {
 
                     <div className="flex justify-end">
                       <div className="flex items-center">
-                        <p className="josefin text-white text-3xl">Humidity</p>
-                        <img className="ml-3" src={thermometer.src} alt="" />
+                        <p className="josefin text-white sm:text-3xl text-2xl">Humidity</p>
+                        <img className="ml-3 sm:block hidden" src={thermometer.src} alt="" />
                       </div>
                     </div>
                     <div className="flex justify-center">
                       <div className="line min-h-[48px]"></div>
                     </div>
                     <div className="flex items-center">
-                      <p className="josefin text-white text-3xl">{currentHumidity + '%'}</p>
+                      <p className="josefin text-white sm:text-3xl text-2xl">{currentHumidity + '%'}</p>
                     </div>
 
                   </div>
@@ -664,34 +788,34 @@ export default function Home() {
           </div>
 
           {/* SECOND COLUMN 5 DAY FORECAST */}
-          <div className="py-6 px-8 boxTwoBg w-full rounded-3xl h-[785px] overflow-y-scroll">
+          <div className="sm:py-6 sm:px-8 py-4 px-4 boxTwoBg w-full rounded-3xl 2xl:h-[785px] xl:h-[970px] md:h-[785px] h-[720px] overflow-y-scroll">
 
             <div className="flex items-center">
-              <img className="min-h-[90px] pb-2" src={calender.src} alt="" />
-              <h1 className="josefin text-white text-[66px] font-bold text-center w-full">5 Day Forecast</h1>
+              <img className="sm:min-h-[90px] min-h-[60px] pb-2" src={calender.src} alt="" />
+              <h1 className="josefin text-white md:text-[66px] sm:text-5xl text-4xl font-bold text-center w-full sm:leading-tight">5 Day Forecast</h1>
             </div>
 
-            <hr className="my-7" />
+            <hr className="2xl:my-7 xl:my-10 my-7" />
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} />
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
 
-            <hr className="my-7" />
+            <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} />
+            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
 
-            <hr className="my-7" />
+            <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} />
+            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
 
-            <hr className="my-7" />
+            <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} />
+            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
 
-            <hr className="my-7" />
+            <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} />
+            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
 
           </div>
         </div>
