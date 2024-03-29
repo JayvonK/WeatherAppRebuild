@@ -1,7 +1,7 @@
 import { CityNameFormat } from '@/utils/DescriptionFormat'
 import React from 'react'
 
-const SearchBarComponent = (props : {handleFavActive: () => void, star: string, pastSearch: boolean, favActive: boolean, magnifyingGlass: string, handleSearchButton: () => void, handleChange: () => void, handleKeyDown: () => void, userInput: string, handlePastSearchTrue: () => void, handlePastSearchFalse : () => void, pastSearchArray: string[], handlePastSearchClick: (p: string) => void, backArrow: string, handleRemovePastSearchFav: (p: string) => void, x: string, starOutline: string, handleSavePastSearchFav: (p:string) => void, handleRemoveFav: (p:string) => void, favoritesArray: string[] } ) => {
+const SearchBarComponent = (props : {handleFavActive: () => void, star: string, pastSearch: boolean, favActive: boolean, magnifyingGlass: string, handleSearchButton: () => void, handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void, userInput: string, handlePastSearchTrue: () => void, handlePastSearchFalse : () => void, pastSearchArray: string[], handlePastSearchClick: (p: string) => void, backArrow: string, handleRemovePastSearchFav: (p: string) => void, x: string, starOutline: string, handleSavePastSearchFav: (p:string) => void, handleRemoveFav: (p:string) => void, favoritesArray: string[] } ) => {
   return (
     <div className="grid xl:grid-cols-[50%_6%_44%] mb-8">
 
@@ -49,7 +49,6 @@ const SearchBarComponent = (props : {handleFavActive: () => void, star: string, 
                         </div>
                       )
                     }
-
                   </div>
                 ) : (
                   <div></div>
