@@ -237,6 +237,7 @@ const WeatherAppComponent = () => {
 
   const handlePastSearchClick = (city: string) => {
     setPastSearch(false);
+    setFavActive(false);
     setUserInput("");
     searchForWeather(city, key);
   }
@@ -558,7 +559,7 @@ const WeatherAppComponent = () => {
 
   return (
     <div className="min-h-screen weatherBg sm:px-16 sm:py-8 py-6 px-6">
-      <div className="boxBg h-full w-full xl:py-10 xl:px-14 px-4 py-4 rounded-2xl">
+      <div className="boxBg h-full w-full xl:py-10 xl:px-14 px-4 py-4 rounded-2xl darkShadow">
 
         {/* First row of the page */}
         <SearchBarComponent handleFavActive={handleFavActive} star={star.src} pastSearch={pastSearch} favActive={favActive} magnifyingGlass={magnifyingGlass.src} handleSearchButton={handleSearchButton} handleChange={handleChange} handleKeyDown={handleKeyDown} userInput={userInput} handlePastSearchTrue={handlePastSearchTrue} handlePastSearchFalse={handlePastSearchFalse} pastSearchArray={pastSearchArray} handlePastSearchClick={handlePastSearchClick} backArrow={backArrow.src} handleRemovePastSearchFav={handleRemovePastSearchFav} x={x.src} starOutline={starOutline.src} handleSavePastSearchFav={handleSavePastSearchFav} handleRemoveFav={handleRemoveFav} favoritesArray={favoritesArray} />
@@ -571,7 +572,7 @@ const WeatherAppComponent = () => {
           <div>
 
             {/* The first box */}
-            <CityBoxComponent currentDayIcon={currentDayIcon} isFav={isFav} currentName={currentName} star={star.src} handleFavoriteClick={handleFavoriteClick} starOutline={starOutline.src} currentTemp={currentTemp} farenheitClass={farenheitClass} handleFarenheit={handleFarenheit} celciusClass={celciusClass} handleCelcius={handleCelcius} currentDescription={currentDescription} />
+            <CityBoxComponent currentDayIcon={currentDayIcon.src} isFav={isFav} currentName={currentName} star={star.src} handleFavoriteClick={handleFavoriteClick} starOutline={starOutline.src} currentTemp={currentTemp} farenheitClass={farenheitClass} handleFarenheit={handleFarenheit} celciusClass={celciusClass} handleCelcius={handleCelcius} currentDescription={currentDescription} />
 
             {/* Other info max temp, low temp, etc */}
 
@@ -586,7 +587,7 @@ const WeatherAppComponent = () => {
           </div>
 
           {/* SECOND COLUMN 5 DAY FORECAST */}
-          <div className="sm:py-6 sm:px-8 py-4 px-4 boxTwoBg w-full rounded-3xl 2xl:h-[785px] xl:h-[970px] md:h-[785px] h-[720px] overflow-y-scroll">
+          <div className="sm:py-6 sm:px-8 py-4 px-4 boxTwoBg w-full rounded-3xl 2xl:h-[785px] xl:h-[970px] md:h-[785px] h-[720px] overflow-y-scroll scrollbar darkShadow2">
 
             <div className="flex items-center">
               <img className="sm:min-h-[90px] min-h-[60px] pb-2" src={calender.src} alt="" />

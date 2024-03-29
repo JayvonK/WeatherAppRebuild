@@ -56,7 +56,7 @@ const SearchBarComponent = (props : {handleFavActive: () => void, star: string, 
               }
               {
                 !props.pastSearch && props.favActive ? (
-                  <div className="absolute w-full z-30 max-h-52 overflow-y-scroll">
+                  <div className="absolute w-full z-30 max-h-52 overflow-y-scroll scrollbar">
                     <div className="min-h-12 text-yellow-200 josefin w-full searchBg font-bold text-xl flex items-center">
                       <h1 className="pl-5">Favorite Locations</h1>
                     </div>
@@ -70,7 +70,7 @@ const SearchBarComponent = (props : {handleFavActive: () => void, star: string, 
                         return (
                           <div key={i} className={i === props.favoritesArray.length - 1 ? "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl bottomRadius" : "min-h-12 text-white josefin w-full searchBg flex items-center hover:bg-gray-400 text-xl"}>
                             <div className="flex justify-between w-full">
-                              <p className="pl-5 hover:cursor-pointer" onClick={() => props.handlePastSearchClick(fav)}>{CityNameFormat(fav)}</p>
+                              <p className="pl-5 hover:cursor-pointer w-full" onClick={() => props.handlePastSearchClick(fav)}>{CityNameFormat(fav)}</p>
                               <img className="mx-3 hover:cursor-pointer" src={props.star} alt="" onClick={() => props.handleRemoveFav(fav)} />
                             </div>
                           </div>

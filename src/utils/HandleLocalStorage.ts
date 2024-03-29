@@ -61,7 +61,7 @@ export const getFavorites = () => {
 export const saveToFavorites = (name: string) => {
   let past: string[] = getFavorites();
   if (!past.includes(name.toLowerCase())) {
-    past.push(name.toLowerCase());
+    past.unshift(name.toLowerCase());
   }
   localStorage.setItem("WeatherAppPastFavorites", JSON.stringify(past));
 };
