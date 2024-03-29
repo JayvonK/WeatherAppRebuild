@@ -19,7 +19,6 @@ import { useEffect, useState } from "react";
 import WeekDayComponent from "../Components/WeekDayComponent";
 import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
 import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
-// import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
 import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
