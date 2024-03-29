@@ -15,5 +15,5 @@ Edit: Jayvon Khuth - I fixed the component accordion bug, all I had to do was ad
 
 LINKS:
 Figma - https://www.figma.com/file/p1BcHrGsq1wEIrLkMJlSzg/Weather-App-figma?type=design&node-id=10%3A50&mode=design&t=N47t5CgGsB4W88iC-1
-Vercel - https://weather-app-rebuild.vercel.app/
+Vercel - [https://weather-app-rebuild.vercel.app/](https://weather-app-rebuild-one.vercel.app/)
 Github - https://github.com/JayvonK/WeatherAppRebuild
