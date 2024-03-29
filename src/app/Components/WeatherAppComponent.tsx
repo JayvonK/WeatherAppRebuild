@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import WeekDayComponent from "../Components/WeekDayComponent";
 import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
 import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
-// import { key } from "@/utils/environment";
+import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
 import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
@@ -33,9 +33,6 @@ import CityBoxComponent from "../Components/CityBoxComponent";
 import MainInfoComponent from "../Components/MainInfoComponent";
 
 const WeatherAppComponent = () => {
-
-  let key = process.env.weather_key;
-
 
   const [dayOne, setDayOne] = useState<boolean>(false);
   const [dayTwo, setDayTwo] = useState<boolean>(false);
