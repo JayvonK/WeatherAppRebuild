@@ -1,36 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![alt text](image.png)
 
-## Getting Started
+Jayvon Khuth
 
-First, run the development server:
+3/28/2024
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Weather App Rebuild
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I was tasked to recreate my original weather app design, that I designed in figma. The technologies I used to create this website app is Html, CSS, OpenWeatherAPI & Javascript/Typescript, and for the frameworks I used Next JS & TailWind CSS. What I did to make my web app work is I used api chaining and also leveraged local storage to be able to see past searches and favorite cities. Recreating this application was a bit challenging, but in the end I had lots of fun recreating my original weather app design.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Peer Reviewer: 
+Peer Review: 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+LINKS:
+Figma - https://www.figma.com/file/p1BcHrGsq1wEIrLkMJlSzg/Weather-App-figma?type=design&node-id=10%3A50&mode=design&t=N47t5CgGsB4W88iC-1
+Vercel - https://weather-app-rebuild.vercel.app/
+Github - https://github.com/JayvonK/WeatherAppRebuild
