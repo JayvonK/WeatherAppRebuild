@@ -1,24 +1,24 @@
 import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
 
-export const CurrentApiCall = async (a: any, b: any, c: string) => {
+export const CurrentApiCall = async (a: any, b: any, c: any) => {
   const promise = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${a}&lon=${b}&appid=${c}&units=imperial`)
   const data: ICurrentDayData = await promise.json()
   return data;
 }
 
-export const FiveDayApiCall = async (a:any, b:any, c:string) => {
+export const FiveDayApiCall = async (a:any, b:any, c:any) => {
   const promise = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${a}&lon=${b}&appid=${c}&units=imperial`)
   const data: IFiveDayData = await promise.json();
   return data;
 }
 
-export const SearchCurrentApiCall = async(cityName:string, k:string) => {
+export const SearchCurrentApiCall = async(cityName:string, k:any) => {
   const promise = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${k}&units=imperial`)
   const data:ICurrentDayData = await promise.json();
   return data;
 }
 
-export const SearchFiveDayApiCall = async (cityName:string, k:string) => {
+export const SearchFiveDayApiCall = async (cityName:string, k:any) => {
   const promise = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${k}&units=imperial`)
   const data = await promise.json();
   return data;

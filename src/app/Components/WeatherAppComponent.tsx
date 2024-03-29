@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import WeekDayComponent from "../Components/WeekDayComponent";
 import { CurrentApiCall, FiveDayApiCall, SearchCurrentApiCall, SearchFiveDayApiCall } from "@/Data/DataServices";
 import { ICurrentDayData, IFiveDayData } from "@/Interfaces/Interfaces";
-import { key } from "@/utils/environment";
+// import { key } from "@/utils/environment";
 import WeatherDataCopy from '@/utils/WeatherCopy.json';
 import FiveDayDataCopy from '@/utils/FiveDayWeatherCopy.json'
 import { ConvertToCelsius, ConvertToFarenheit } from "@/utils/TempConverter";
@@ -33,6 +33,8 @@ import CityBoxComponent from "../Components/CityBoxComponent";
 import MainInfoComponent from "../Components/MainInfoComponent";
 
 const WeatherAppComponent = () => {
+
+  let key = process.env.weather_key;
 
 
   const [dayOne, setDayOne] = useState<boolean>(false);
@@ -290,7 +292,7 @@ const WeatherAppComponent = () => {
     setFavoritesArray(getFavorites());
   }
 
-  const initWeatherCall = async (lat: any, long: any, key: string) => {
+  const initWeatherCall = async (lat: any, long: any, key: any) => {
     let data: ICurrentDayData = await CurrentApiCall(lat, long, key);
     let FiveDayData: IFiveDayData = await FiveDayApiCall(lat, long, key);
     // let data: ICurrentDayData = currentWeatherData;
@@ -412,7 +414,7 @@ const WeatherAppComponent = () => {
     grabLocalStorage(name.toLowerCase())
   }
 
-  const searchForWeather = async (city: string, key: string) => {
+  const searchForWeather = async (city: string, key: any) => {
     try {
       let data: ICurrentDayData = await SearchCurrentApiCall(city, key);
       let FiveDayData: IFiveDayData = await SearchFiveDayApiCall(city, key);
