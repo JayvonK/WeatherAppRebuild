@@ -9,7 +9,7 @@ import wind from '../../../public/images/wind-bold.svg';
 import arrDown from '../../../public/images/caret-down-bold.svg';
 
 
-const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weatherIcon: string, dayName: string, maxTemp: number, minTemp: number, wind: number, humidity: number, description: string, handleFarenheit: () => void, handleCelcius: () => void, farenheitClass: string, celciusClass: string }) => {
+const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weatherIcon: string, dayName: string, maxTemp: number, minTemp: number, wind: number, humidity: number, description: string, handleFarenheit: () => void, handleCelcius: () => void, farenheitClass: string, celciusClass: string, degreeSymbol: string }) => {
   return (
     <div>
       {
@@ -49,7 +49,7 @@ const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weather
                     <div className="line"></div>
                   </div>
                   <div className="flex items-center">
-                    <p className="text-white josefin sm:text-2xl text-xl">{props.maxTemp} F</p>
+                    <p className="text-white josefin sm:text-2xl text-xl">{props.maxTemp} {props.degreeSymbol}</p>
                   </div>
                 </div>
 
@@ -61,7 +61,7 @@ const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weather
                     <div className="line"></div>
                   </div>
                   <div className="flex items-center">
-                    <p className="text-white josefin sm:text-2xl text-xl">{props.minTemp} F</p>
+                    <p className="text-white josefin sm:text-2xl text-xl">{props.minTemp} {props.degreeSymbol}</p>
                   </div>
                 </div>
 

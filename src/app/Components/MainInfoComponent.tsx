@@ -19,7 +19,7 @@ const MainInfoComponent = (props: {thermometer: string, currentMaxTemp: number, 
                             <div className="line min-h-[48px]"></div>
                         </div>
                         <div className="flex items-center">
-                            <p className="josefin text-white sm:text-3xl text-2xl">{props.currentMaxTemp + "°" + props.degreeSymbol}</p>
+                            <p className="josefin text-white sm:text-3xl text-2xl">{props.currentMaxTemp + props.degreeSymbol}</p>
                         </div>
 
                     </div>
@@ -57,7 +57,7 @@ const MainInfoComponent = (props: {thermometer: string, currentMaxTemp: number, 
                             <div className="line min-h-[48px]"></div>
                         </div>
                         <div className="flex items-center">
-                            <p className="josefin text-white sm:text-3xl text-2xl">{props.currentMinTemp + "°" + props.degreeSymbol}</p>
+                            <p className="josefin text-white sm:text-3xl text-2xl">{props.currentMinTemp + props.degreeSymbol}</p>
                         </div>
                     </div>
 

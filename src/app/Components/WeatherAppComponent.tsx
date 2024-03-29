@@ -63,7 +63,7 @@ const WeatherAppComponent = () => {
   const [celciusClass, setCelciusClass] = useState<string>('sm:text-5xl tempGray text-3xl');
   const [farenheitClass2, setFarenheitClass2] = useState<string>('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white')
   const [celciusClass2, setCelciusClass2] = useState<string>('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
-  const [degreeSymbol, setDegreeSymbol] = useState<string>('F');
+  const [degreeSymbol, setDegreeSymbol] = useState<string>('°F');
   const [currentWeatherData, setCurrentWeatherData] = useState<ICurrentDayData>(WeatherDataCopy);
   // const [currentLong, setCurrentLong] = useState('-121.275604');
   // const [currentLat, setCurrentLat] = useState('37.961632');
@@ -140,7 +140,7 @@ const WeatherAppComponent = () => {
     setCelciusClass('sm:text-5xl tempGray text-3xl');
     setFarenheitClass2('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white');
     setCelciusClass2('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
-    setDegreeSymbol('F');
+    setDegreeSymbol('°F');
     setCurrentTemp(farenheitTemp);
     setCurrentMaxTemp(farenheitMaxTemp);
     setCurrentMinTemp(farenheitMinTemp);
@@ -163,7 +163,7 @@ const WeatherAppComponent = () => {
     setFarenheitClass('sm:text-5xl tempGray text-3xl');
     setFarenheitClass2('2xl:text-3xl xl:text-2xl md:text-3xl sm:text-2xl text-xl tempGray');
     setCelciusClass2('2xl:text-[40px] xl:text-3xl md:text-[40px] sm:text-3xl text-2xl text-white');
-    setDegreeSymbol('C');
+    setDegreeSymbol('°C');
     console.log(currentWeatherData);
     setCurrentTemp(ConvertToCelsius(currentTemp));
     setCurrentMaxTemp(ConvertToCelsius(currentMaxTemp));
@@ -597,23 +597,23 @@ const WeatherAppComponent = () => {
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
+            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
+            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
+            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} />
+            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
 
           </div>
         </div>
