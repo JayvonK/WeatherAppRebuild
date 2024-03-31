@@ -20,7 +20,6 @@ const WeekDayComponent = (props: { bool: boolean, handleDay: () => void, weather
               <img src={arrDown.src} className={"w-16 rotateArrow hover:cursor-pointer"} alt="" onClick={props.handleDay} />
             </div>
 
-
             <div className="grid md:grid-cols-[35%_65%] grid-cols-[45%_55%]">
               {/* Left Side General Info */}
               <div >

@@ -576,7 +576,7 @@ const WeatherAppComponent = () => {
             {/* Other info max temp, low temp, etc */}
 
             <MainInfoComponent thermometer={thermometer.src} currentMaxTemp={currentMaxTemp} degreeSymbol={degreeSymbol} currentWind={currentWind} currentMinTemp={currentMinTemp} currentHumidity={currentHumidity} />
-            
+
 
           </div>
 
@@ -597,23 +597,23 @@ const WeatherAppComponent = () => {
 
 
             {/* THE ACCORDION */}
-            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
+            <WeekDayComponent bool={dayOne} handleDay={handleDayOne} weatherIcon={firstDayIcon.src} dayName={firstDayName} maxTemp={firstDayMaxTemp} minTemp={firstDayMinTemp} wind={firstDayWind} humidity={firstDayHumidity} description={firstDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol} />
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
+            <WeekDayComponent bool={dayTwo} handleDay={handleDayTwo} weatherIcon={secondDayIcon.src} dayName={secondDayName} maxTemp={secondDayMaxTemp} minTemp={secondDayMinTemp} wind={secondDayWind} humidity={secondDayHumidity} description={secondDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol} />
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
+            <WeekDayComponent bool={dayThree} handleDay={handleDayThree} weatherIcon={thirdDayIcon.src} dayName={thirdDayName} maxTemp={thirdDayMaxTemp} minTemp={thirdDayMinTemp} wind={thirdDayWind} humidity={thirdDayHumidity} description={thirdDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol} />
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
+            <WeekDayComponent bool={dayFour} handleDay={handleDayFour} weatherIcon={fourthDayIcon.src} dayName={fourthDayName} maxTemp={fourthDayMaxTemp} minTemp={fourthDayMinTemp} wind={fourthDayWind} humidity={fourthDayHumidity} description={fourthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol} />
 
             <hr className="2xl:my-7 xl:my-10 my-7" />
 
-            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol}/>
+            <WeekDayComponent bool={dayFive} handleDay={handleDayFive} weatherIcon={fifthDayIcon.src} dayName={fifthDayName} maxTemp={fifthDayMaxTemp} minTemp={fifthDayMinTemp} wind={fifthDayWind} humidity={fifthDayHumidity} description={fifthDayDescription} handleFarenheit={handleFarenheit} handleCelcius={handleCelcius} farenheitClass={farenheitClass2} celciusClass={celciusClass2} degreeSymbol={degreeSymbol} />
 
           </div>
         </div>

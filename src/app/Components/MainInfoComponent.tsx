@@ -1,6 +1,6 @@
 import React from 'react'
 
-const MainInfoComponent = (props: {thermometer: string, currentMaxTemp: number, degreeSymbol: string, currentWind: number, currentMinTemp: number, currentHumidity: number }) => {
+const MainInfoComponent = (props: { thermometer: string, currentMaxTemp: number, degreeSymbol: string, currentWind: number, currentMinTemp: number, currentHumidity: number }) => {
     return (
         <div className="sm:px-3 xl:mb-14 sm:mb-20 mb-14">
             <div className="grid 2xl:grid-cols-2 2xl:gap-0 xl:gap-8 xl:grid-cols-1 lg:grid-cols-2 gap-8">
@@ -43,6 +43,8 @@ const MainInfoComponent = (props: {thermometer: string, currentMaxTemp: number, 
                     </div>
 
                 </div>
+
+                
                 <div className="grid grid-rows-2 gap-8">
                     {/* Max Temp */}
                     <div className="grid 2xl:grid-cols-[50%_20%_30%] grid-cols-[40%_20%_40%]">
