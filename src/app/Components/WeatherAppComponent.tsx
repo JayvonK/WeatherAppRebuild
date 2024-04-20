@@ -371,7 +371,6 @@ const WeatherAppComponent = () => {
     setThirdDayHumidity(Math.max(...thirdDayHumidityArray));
     setThirdDayDescription(DescriptionFormat(FindMostRepeated(thirdDayDescriptionArray)));
 
-
     let fourthDayData = FiveDayData.list.filter(data => GetDayOfWeek(data.dt_txt) === GetWeekDays()[3]);
     let fourthDayMaxTempArray = fourthDayData.map(data => data.main.temp_max);
     let fourthDayMinTempArray = fourthDayData.map(data => data.main.temp_min);
@@ -422,7 +421,7 @@ const WeatherAppComponent = () => {
       let minTemp: number = Math.floor(data.main.temp_min);
       let description: string = data.weather[0].description;
       let wind: number = data.wind.speed;
-      let humidity: number = Math.floor(data.main.humidity);
+      let humidity: number = Math.floor(data.main.humidity)
       let name: string = data.name + ", " + data.sys.country;
       let icon: string = data.weather[0].icon;
       setCurrentTemp(temp);
